@@ -1,0 +1,52 @@
+html {
+    height: 100%;
+    font-family: 'Lato', sans-serif;
+    font-weight: 700;
+}
+body {
+    margin: 0;
+    height: 100%;
+}
+#root {
+    height: 100%;
+    display: flex;
+    flex-direction: row;
+}
+.sidebar {
+    box-shadow: 0px 1px 8px rgba(81, 70, 137, 0.5);
+    border-radius: 0px 0px 20px 0px;
+}
+hr {
+    border: none;
+    height: 1px;
+    color: rgba(81, 70, 137, 0.7);
+    background-color: rgba(81, 70, 137, 0.7);
+}
+.sidebarElement {
+    border-radius: 5px;
+    padding: 5px;
+}
+.sidebarElement:hover {
+    background-color: rgba(123, 97, 255, 0.05);
+}
+.sidebarIsThisPage {
+    width: 6px;
+    border-radius: 20px 0 0 20px;
+    background-color: rgba(239, 66, 111, 1);
+    justify-self: right;
+}
+.scrollbar-y {
+    overflow: hidden auto;
+}
+.scrollbar-y::-webkit-scrollbar {
+    width: 6px;
+    display: block;
+}
+.scrollbar-y::-webkit-scrollbar-thumb {
+    background-color: rgba(81, 70, 137, 0.7);
+}
+.navbar {
+    width: 100%;
+    background: linear-gradient(90deg, #EF426F 0%, #514689 25.49%, #FFFFFF 51.52%);
+    height: 52px;
+}

@@ -1,0 +1,23 @@
+.login {
+    background: linear-gradient(299.92deg, #514689 18.26%, #EF426F 117.31%);
+    color: #041E42;
+    width: 100%;
+    height: 100%;
+    display: flex;
+}
+::placeholder {
+    color: rgba(81, 70, 137, 0.3);
+}
+:-ms-input-placeholder { /* Internet Explorer 10-11 */
+    color: rgba(81, 70, 137, 0.3);
+}
+::-ms-input-placeholder { /* Microsoft Edge */
+    color: rgba(81, 70, 137, 0.3);
+}
+.link {
+    color: rgba(239, 66, 111, 1);
+    text-decoration: none;
+}
+.link:hover {
+    color: rgba(81, 70, 137, 1)
+}
