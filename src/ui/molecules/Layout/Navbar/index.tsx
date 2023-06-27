@@ -36,7 +36,7 @@ export const Navbar = ({ label }: Props) => {
                   position: 'absolute',
                   background: 'white',
                   right: 0,
-                  marginTop: 'auto',
+                  marginTop: 'auto ',
                 }}
               >
                 <ul style={{ margin: '0', listStyle: 'none', padding: '0' }}>
