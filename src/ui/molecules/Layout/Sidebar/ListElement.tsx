@@ -1,10 +1,10 @@
-import { useState } from 'react';
+import { HTMLAttributes, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Icons, Switch } from '../../../atoms';
 import { icons } from '../../../atoms/Icons';
 import { SwitchElement } from '../../../../utils';
 
-interface Props {
+interface Props extends HTMLAttributes<HTMLDivElement> {
   label: string;
   link: string | null;
   image: icons;
@@ -27,6 +27,7 @@ function ListElement({
   sidebarIsOpen,
   setSidebarIsOpen,
   switchElement,
+  ...rest
 }: Props) {
   const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
@@ -43,10 +44,11 @@ function ListElement({
         display: 'grid',
         gridTemplateColumns: sidebarIsOpen ? 'repeat(2,1fr)' : 'repeat(3,1fr)',
       }}
+      {...rest}
     >
       {sidebarIsOpen ? null : <div></div>}
       <div
-        className='sidebarElement'
+        className='sidebarElement pointer'
         onClick={
           link !== null
             ? () => navigate(link)
@@ -136,7 +138,7 @@ function ListElement({
               <div
                 key={list.link}
                 onClick={() => navigate(list.link)}
-                className='sidebarElement'
+                className='sidebarElement pointer'
                 style={{
                   fontSize: '18px',
                   marginTop: '5px',

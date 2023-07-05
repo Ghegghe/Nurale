@@ -22,6 +22,13 @@ hr {
     color: rgba(81, 70, 137, 0.7);
     background-color: rgba(81, 70, 137, 0.7);
 }
+.hrgray {
+    border: none;
+    height: 2px;
+    margin: 0;
+    color: rgba(123, 97, 255, 0.05);
+    background-color: rgba(123, 97, 255, 0.05);
+}
 .sidebarElement {
     border-radius: 5px;
     padding: 5px;
@@ -49,4 +56,23 @@ hr {
     width: 100%;
     background: linear-gradient(90deg, #EF426F 0%, #514689 25.49%, #FFFFFF 51.52%);
     height: 52px;
+}
+.pointer {
+    cursor: pointer;
+}
+.styledTable tbody tr:nth-child(odd) {
+    background-color: rgba(123, 97, 255, 0.05);
+}
+.styledTable td,th {
+    padding: 15px 0 15px 20px;
+    text-align: left;
+}
+.styledTable {
+    border-collapse: collapse;
+}
+.styledTable th {
+    font-weight: 700;
+}
+.styledTable td {
+    font-weight: 400;
 }

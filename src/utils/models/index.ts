@@ -34,3 +34,19 @@ export interface JwtTokenDecoded {
     state?: boolean;
     rtl?: boolean;
   }
+
+  export interface User {
+    id?: number
+    email: string
+    password?: string
+    passwordConfirm?: string
+    lastName: string
+    firstName: string
+    phone: string
+    requiredActions?: string[]
+    realmRoles?: string[]
+    resourceIs?: number
+    hasDarkTheme?: boolean
+  }
+
+  export type Actions = 'Add' | 'Edit' | 'Delete';

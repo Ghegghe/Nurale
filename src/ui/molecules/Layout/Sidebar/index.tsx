@@ -4,6 +4,7 @@ import { Icons } from '../../../atoms';
 import { SIDEBAR } from '../../../../utils/constant/sidebar';
 import ListElement from './ListElement';
 import { ROUTES } from '../../../../utils';
+import { removeTokenCookies } from '../../../../utils/auth';
 
 const Sidebar = () => {
   const [sidebarIsOpen, setSidebarIsOpen] = useState(true);
@@ -23,6 +24,7 @@ const Sidebar = () => {
     >
       <HideSidebar
         onClick={() => setSidebarIsOpen(!sidebarIsOpen)}
+        className='pointer'
         isOpen={sidebarIsOpen}
         size={25}
         style={{
@@ -69,7 +71,7 @@ const Sidebar = () => {
           gridTemplateColumns: '1fr',
         }}
       >
-        <div style={{ direction: 'ltr', width: sidebarIsOpen ? '225px' : 'auto', marginLeft: '0' }}>
+        <div style={{ direction: 'ltr', width: sidebarIsOpen ? '230px' : 'auto', marginLeft: '0' }}>
           {SIDEBAR.map((sidebar) => (
             <ListElement
               key={sidebar.link}
@@ -99,18 +101,11 @@ const Sidebar = () => {
             width: sidebarIsOpen ? '205px' : '50px',
           }}
         />
-        <div style={{ marginLeft: sidebarIsOpen ? '35px' : '0' }}>
-          <ListElement
-            label='Impostazioni account'
-            link={ROUTES.account}
-            image='Setting'
-            size={20}
-            sidebarIsOpen={sidebarIsOpen}
-            setSidebarIsOpen={setSidebarIsOpen}
-          />
+        <div style={{ marginLeft: sidebarIsOpen ? '30px' : '0' }}>
           <ListElement
             label='Log out'
             link={ROUTES.login}
+            onClick={() => removeTokenCookies()}
             image='Logout'
             size={20}
             sidebarIsOpen={sidebarIsOpen}

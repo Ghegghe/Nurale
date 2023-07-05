@@ -1,0 +1,8 @@
+export {default as Add} from './add'
+export {default as LeftArrow} from './leftArrow'
+export {default as RightArrow} from './rightArrow'
+export {default as Close} from './close'
+export {default as Edit} from './edit'
+export {default as Delete} from './delete'
+export {default as Confirm} from './confirm'
+export {default as MagnifyingGlass} from './magnifyingGlass'

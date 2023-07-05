@@ -1,18 +1,8 @@
-import {
-  BillingPage,
-  DashboardPage,
-  Esempio1,
-  Esempio2,
-  Esempio3,
-  LoginPage,
-  RecoverPage,
-  RegisterPage,
-  SkillPage,
-} from '../pages';
+import { DashboardPage, LoginPage, RecoverPage, RegisterPage, UsersPage } from '../pages';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { ROUTES } from '../../utils/constant';
 import Layout from '../molecules/Layout';
-import ClientPage from '../pages/Client';
+
 import RequireAuth from '../../utils/helper/RequireAuth';
 
 const AppRoutes = () => {
@@ -26,12 +16,25 @@ const AppRoutes = () => {
           <Route element={<RequireAuth />}>
             <Route element={<Layout />}>
               <Route path={ROUTES.dashboard} element={<DashboardPage />} />
-              <Route path={ROUTES.client} element={<ClientPage />} />
-              <Route path={ROUTES.skill} element={<SkillPage />} />
-              <Route path={ROUTES.billing} element={<BillingPage />} />
-              <Route path={ROUTES.example1} element={<Esempio1 />} />
-              <Route path={ROUTES.example2} element={<Esempio2 />} />
-              <Route path={ROUTES.example3} element={<Esempio3 />} />
+              <Route path={ROUTES.users} element={<UsersPage />} />
+              {/* <Route path={ROUTES.quickInsert} element={<DashboardPage />} />
+              <Route path={ROUTES.jobs} element={<DashboardPage />} />
+              <Route path={ROUTES.orders} element={<DashboardPage />} />
+              <Route path={ROUTES.activities} element={<DashboardPage />} />
+              <Route path={ROUTES.customers} element={<DashboardPage />} />
+              <Route path={ROUTES.suppliers} element={<DashboardPage />} />
+              <Route path={ROUTES.resources} element={<DashboardPage />} />
+              <Route path={ROUTES.resourceSkill} element={<DashboardPage />} />
+              <Route path={ROUTES.purchaseInvoice} element={<DashboardPage />} />
+              <Route path={ROUTES.purchaseInvoiceActivity} element={<DashboardPage />} />
+              <Route path={ROUTES.salesInvoices} element={<DashboardPage />} />
+              <Route path={ROUTES.scheduledPayments} element={<DashboardPage />} />
+              <Route path={ROUTES.scheduledValues} element={<DashboardPage />} />
+              <Route path={ROUTES.skills} element={<DashboardPage />} />
+              <Route path={ROUTES.typesOfPayments} element={<DashboardPage />} />
+              
+              <Route path={ROUTES.timesheet} element={<DashboardPage />} />
+              <Route path={ROUTES.report} element={<DashboardPage />} /> */}
             </Route>
           </Route>
         </Routes>

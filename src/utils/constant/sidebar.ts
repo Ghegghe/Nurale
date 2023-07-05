@@ -18,78 +18,125 @@ export const SIDEBAR: Sidebar[] = [
         image: 'Home',
     },
     {
-        label: 'Clienti',
-        link: ROUTES.client,
-        image: 'Client',
-    },
-    {
-        label: 'Fornitori',
-        link: null,
-        image: 'Supplier',
-        subList: [
-            {
-                label: 'Voce 1', 
-                link: ROUTES.example1,
-            },
-            {
-                label: 'Voce 2', 
-                link: ROUTES.example2,
-            }
-        ]
-    },
-    {
-        label: 'Fornitori',
-        link: null,
-        image: 'Supplier',
-        subList: [
-            {
-                label: 'Voce 1', 
-                link: ROUTES.example1,
-            },
-            {
-                label: 'Voce 2', 
-                link: ROUTES.example2,
-            }
-        ]
-    },
-    {
-        label: 'Fornitori',
-        link: null,
-        image: 'Supplier',
-        subList: [
-            {
-                label: 'Voce 1', 
-                link: ROUTES.example1,
-            },
-            {
-                label: 'Voce 2', 
-                link: ROUTES.example2,
-            }
-        ]
-    },
-    {
-        label: 'Risorse',
-        link: null,
+        label: 'Inserimento veloce',
+        link: ROUTES.dashboard,
         image: 'Resources',
+    },
+    {
+        label: 'Commesse',
+        link: null,
+        image: 'Billing',
         subList: [
             {
-                label: 'Voce 1', 
-                link: ROUTES.example1,
+                label: 'Commesse', 
+                link: ROUTES.dashboard,
             },
             {
-                label: 'Voce 3', 
-                link: ROUTES.example3,
+                label: 'Ordini', 
+                link: ROUTES.dashboard,
+            },
+            {
+                label: 'Attività', 
+                link: ROUTES.dashboard,
+            },
+        ]
+    },
+    {
+        label: 'Anagrafiche',
+        link: null,
+        image: 'Client',
+        subList: [
+            {
+                label: 'Clienti', 
+                link: ROUTES.dashboard,
+            },
+            {
+                label: 'Fornitori', 
+                link: ROUTES.dashboard,
+            },
+            {
+                label: 'Risorse', 
+                link: ROUTES.dashboard,
+            },
+            {
+                label: 'Skills delle risorse', 
+                link: ROUTES.dashboard,
+            },
+        ]
+    },
+    {
+        label: 'Acquisti',
+        link: null,
+        image: 'Billing',
+        subList: [
+            {
+                label: 'Fattura di acquisto', 
+                link: ROUTES.dashboard,
+            },
+            {
+                label: 'Fattura di acquisto attività', 
+                link: ROUTES.dashboard,
             }
         ]
     },
     {
-        label: 'Abilità',
-        link: ROUTES.skill,
-        image: 'Skill',
+        label: 'Vendite',
+        link: null,
+        image: 'Billing',
+        subList: [
+            {
+                label: 'Fatture di vendita', 
+                link: ROUTES.dashboard,
+            },
+        ]
     },
     {
-        label: 'Tipo di pagamento',
-        link: ROUTES.billing,
+        label: 'Scadenziario',
+        link: null,
         image: 'Billing',
+        subList: [
+            {
+                label: 'Scadenze', 
+                link: ROUTES.dashboard,
+            },
+            {
+                label: 'Pianificazione', 
+                link: ROUTES.dashboard,
+            }
+        ]
+    },
+    {
+        label: 'Impostazioni',
+        link: null,
+        image: 'Setting',
+        subList: [
+            {
+                label: 'Skills', 
+                link: ROUTES.dashboard,
+            },
+            {
+                label: 'Tipi di pagamento', 
+                link: ROUTES.dashboard,
+            },
+            {
+                label: 'Utenti', 
+                link: ROUTES.users,
+            },
+        ]
+    },
+    {
+        label: 'Timesheet',
+        link: null,
+        image: 'Clock',
+        subList: [
+            {
+                label: 'Timesheet', 
+                link: ROUTES.dashboard,
+            },
+            {
+                label: 'Report', 
+                link: ROUTES.dashboard,
+            }
+        ]
     },
 ]
