@@ -30,7 +30,7 @@ const LoginPage = () => {
     if (!errors) {
       return errors;
     }
-    dispatch(LoginUser(methods.getValues()));
+    await dispatch(LoginUser(methods.getValues()));
     return navigate(ROUTES.dashboard);
   };
 
@@ -85,6 +85,7 @@ const LoginPage = () => {
               label={'Password'}
               name={'password'}
               placeholder='Password'
+              isPassword={true}
               style={{
                 display: 'flex',
                 flexDirection: 'column',
@@ -114,11 +115,8 @@ const LoginPage = () => {
             <ButtonComponent
               style={{
                 background: 'rgba(239, 66, 111, 1)',
-                border: 'none',
-                borderRadius: '10px',
                 color: 'white',
                 fontSize: '25px',
-                padding: '8px',
                 width: '100%',
               }}
               onClick={handleAccess}

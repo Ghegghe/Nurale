@@ -8,3 +8,4 @@ export const V1 = '/v1';
 export const AUTH = '/auth';
 export const LOGIN = '/login';
 export const URL_REFRESH = '/token';
+export const USERS = '/users'
