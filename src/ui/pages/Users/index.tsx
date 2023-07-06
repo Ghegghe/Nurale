@@ -2,7 +2,7 @@ import { Flex, Grid } from '@chakra-ui/react';
 import { Navbar } from '../../molecules/Layout/Navbar';
 import '../styles/dashboard.css';
 import { useSelector } from 'react-redux';
-import { addUser, deleteUser, fetchUsers, getUsersData } from '../../../store/users';
+import { addUser, deleteUser, fetchUsers, getUsersData, updateUser } from '../../../store/users';
 import { createColumnHelper } from '@tanstack/react-table';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { FormProvider, useForm } from 'react-hook-form';
@@ -54,7 +54,6 @@ const UsersPage = () => {
   const {
     formState: { errors },
     trigger,
-    // setError,
     getValues,
     reset,
     setValue,
@@ -86,27 +85,31 @@ const UsersPage = () => {
       await dispatch(addUser(getValues()));
       await dispatch(fetchUsers());
       reset(defaultValues);
+      setSelectedUser(null);
       setSelectedAction(null);
       setIsOpenAddForm(false);
     }
-    console.log(errors);
   };
-  const handleEdit = async (user: User) => {
+  const handleEdit = async () => {
     const isValidate = await trigger();
-    if (isValidate) {
-      await dispatch(addUser(getValues()));
+    if (isValidate && selectedUser?.id) {
+      const user: User = { firstName: getValues().firstName, lastName: getValues().lastName };
+      await dispatch(updateUser({ id: selectedUser?.id, user: user }));
       await dispatch(fetchUsers());
       reset(defaultValues);
+      setSelectedUser(null);
       setSelectedAction(null);
-      setIsOpenAddForm(false);
+      setIsOpenEditForm(false);
     }
-    console.log(errors);
   };
-  const handleDelete = async (id: number) => {
-    await dispatch(deleteUser(id));
-    await dispatch(fetchUsers());
-    setSelectedAction(null);
-    setIsOpenDeleteModal(false);
+  const handleDelete = async () => {
+    if (selectedUser?.id) {
+      await dispatch(deleteUser(selectedUser?.id));
+      await dispatch(fetchUsers());
+      setSelectedUser(null);
+      setSelectedAction(null);
+      setIsOpenDeleteModal(false);
+    }
   };
 
   return (
@@ -133,7 +136,9 @@ const UsersPage = () => {
           <Form
             label='AGGIUNGI NUOVO UTENTE'
             onCancel={() => {
+              setSelectedUser(null);
               setSelectedAction(null);
+              reset(defaultValues);
               setIsOpenAddForm(false);
             }}
             onSubmit={() => {
@@ -221,11 +226,13 @@ const UsersPage = () => {
           <Form
             label='MODIFICA UTENTE'
             onCancel={() => {
+              setSelectedUser(null);
               setSelectedAction(null);
+              reset(defaultValues);
               setIsOpenEditForm(false);
             }}
             onSubmit={() => {
-              handleEdit(getValues());
+              handleEdit();
             }}
           >
             <Grid columnGap='10px' gridTemplateColumns={'1fr 1fr'}>
@@ -234,6 +241,7 @@ const UsersPage = () => {
                   label={'Email'}
                   name={'email'}
                   placeholder='Email'
+                  isDisabled={true}
                   style={{
                     display: 'flex',
                     flexDirection: 'column',
@@ -277,30 +285,6 @@ const UsersPage = () => {
                   }}
                   error={errors.lastName?.message}
                 />
-                <InputField
-                  label={'Password'}
-                  name={'password'}
-                  placeholder='Password'
-                  style={{
-                    display: 'flex',
-                    flexDirection: 'column',
-                    marginBottom: '13px',
-                    fontSize: '20px',
-                  }}
-                  error={errors.password?.message}
-                />
-                <InputField
-                  label={'Conferma password'}
-                  name={'passwordConfirm'}
-                  placeholder='Conferma password'
-                  style={{
-                    display: 'flex',
-                    flexDirection: 'column',
-                    marginBottom: '13px',
-                    fontSize: '20px',
-                  }}
-                  error={errors.passwordConfirm?.message}
-                />
               </FormProvider>
             </Grid>
           </Form>
@@ -310,6 +294,7 @@ const UsersPage = () => {
       <Modal
         isOpen={isOpenDeleteModal}
         onOutsudeClick={() => {
+          setSelectedUser(null);
           setSelectedAction(null);
           setIsOpenDeleteModal(false);
         }}
@@ -334,6 +319,7 @@ const UsersPage = () => {
                 <Flex flexDirection='row' justifyContent='center' marginTop='45px'>
                   <ButtonComponent
                     onClick={() => {
+                      setSelectedUser(null);
                       setSelectedAction(null);
                       setIsOpenDeleteModal(false);
                     }}
@@ -349,7 +335,7 @@ const UsersPage = () => {
                   </ButtonComponent>
                   <ButtonComponent
                     onClick={() => {
-                      if (selectedUser.id) handleDelete(selectedUser.id);
+                      handleDelete();
                     }}
                     style={{
                       color: 'white',

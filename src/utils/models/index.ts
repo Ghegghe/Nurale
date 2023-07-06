@@ -37,12 +37,12 @@ export interface JwtTokenDecoded {
 
   export interface User {
     id?: number
-    email: string
+    email?: string
     password?: string
     passwordConfirm?: string
     lastName: string
     firstName: string
-    phone: string
+    phone?: string
     requiredActions?: string[]
     realmRoles?: string[]
     resourceIs?: number

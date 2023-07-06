@@ -1,13 +1,14 @@
-import { InputHTMLAttributes } from 'react';
-import { InputComponent, LabelComponent } from '../../atoms';
+import { HTMLAttributes } from 'react';
+import { InputComponent } from '../../atoms';
 
-interface Props extends InputHTMLAttributes<HTMLInputElement> {
+interface Props extends HTMLAttributes<HTMLDivElement> {
   label: string;
   type?: string;
   name: string;
   placeholder?: string;
   error?: string | undefined;
   isPassword?: boolean;
+  isDisabled?: boolean;
 }
 
 function InputField({
@@ -17,6 +18,7 @@ function InputField({
   placeholder,
   error,
   isPassword,
+  isDisabled = false,
   ...rest
 }: Props) {
   return (
@@ -27,13 +29,16 @@ function InputField({
         type={type}
         name={name}
         isPassword={isPassword}
+        disabled={isDisabled}
         style={{
-          border: '1px solid rgba(81, 70, 137, 0.7)',
+          border: '1px solid',
           borderRadius: '10px',
           padding: '10px',
           fontSize: '20px',
-          color: 'rgba(4, 30, 66, 1)',
+          color: isDisabled ? 'rgba(81, 70, 137, 0.3)' : 'rgba(4, 30, 66, 1)',
           width: '100%',
+          background: isDisabled ? 'rgba(123, 97, 255, 0.05)' : '',
+          borderColor: isDisabled ? 'rgba(81, 70, 137, 0.3)' : 'rgba(81, 70, 137, 0.7)',
         }}
       />
       <span

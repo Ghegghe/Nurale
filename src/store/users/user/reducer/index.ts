@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { initialStateUser } from "../types";
-import { deleteUser } from "../actions";
+import { deleteUser, updateUser } from "../actions";
 import { addUser } from "../actions/add";
 
 
@@ -46,6 +46,21 @@ export const userReducer = createSlice({
             {
                 state.loading = false
                 state.error = 'Errore nel add utente'
+            })
+            .addCase(updateUser.fulfilled, (state, action)=>
+            {
+                state.data = action.payload.data; 
+                state.pagination = action.payload.pagination;
+                state.loading = false
+            })
+            .addCase(updateUser.pending, (state)=>
+            {
+                state.loading = true
+            })
+            .addCase(updateUser.rejected, (state)=>
+            {
+                state.loading = false
+                state.error = 'Errore nel update utente'
             })
     }
     
