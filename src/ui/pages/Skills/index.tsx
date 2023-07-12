@@ -2,11 +2,10 @@ import { Flex, Grid } from '@chakra-ui/react';
 import { Navbar } from '../../molecules/Layout/Navbar';
 import '../styles/dashboard.css';
 import { useSelector } from 'react-redux';
-import { addUser, deleteUser, fetchUsers, getUsersData, updateUser } from '../../../store/users';
 import { createColumnHelper } from '@tanstack/react-table';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { FormProvider, useForm } from 'react-hook-form';
-import { User, Actions } from '../../../utils';
+import { Actions, Skill } from '../../../utils';
 import { schema } from './validation';
 import { TableLayout } from '../../molecules/Layout/PageContent';
 import { useEffect, useState } from 'react';
@@ -15,41 +14,45 @@ import { ButtonComponent, Icons } from '../../atoms';
 import { InputField, Modal } from '../../molecules';
 import { Form } from '../../molecules/Modal';
 import { useTranslation } from 'react-i18next';
+import {
+  addSkill,
+  deleteSkill,
+  fetchSkills,
+  getSkillsData,
+  updateSkill,
+} from '../../../store/skills';
 
-const UsersPage = () => {
+const SkillsPage = () => {
   const [isOpenAddForm, setIsOpenAddForm] = useState(false);
   const [isOpenEditForm, setIsOpenEditForm] = useState(false);
   const [isOpenDeleteModal, setIsOpenDeleteModal] = useState(false);
-  const [selectedUser, setSelectedUser] = useState<User | null>(null);
+  const [selectedSkill, setSelectedSkill] = useState<Skill | null>(null);
   const [selectedAction, setSelectedAction] = useState<Actions | null>(null);
-  const users = useSelector(getUsersData);
+  const skill = useSelector(getSkillsData);
   const { t } = useTranslation();
   const columnHelper: any = createColumnHelper<any>();
 
   const cols = [
-    columnHelper.accessor('firstName', {
+    columnHelper.accessor('name', {
       cell: (Props: any) => Props.getValue(),
-      header: t('pages.users.table.cols.first-name'),
+      header: t('pages.skills.table.cols.name'),
     }),
-    columnHelper.accessor('lastName', {
+    columnHelper.accessor('skill-type', {
       cell: (Props: any) => Props.getValue(),
-      header: t('pages.users.table.cols.last-name'),
+      header: t('pages.skills.table.cols.skill-type'),
     }),
-    columnHelper.accessor('email', {
+    columnHelper.accessor('note', {
       cell: (Props: any) => Props.getValue(),
-      header: t('pages.users.table.cols.email'),
+      header: t('pages.skills.table.cols.note'),
     }),
   ];
 
-  const defaultValues = {
-    email: '',
-    password: '',
-    passwordConfirm: '',
-    lastName: '',
-    firstName: '',
-    resourceId: null,
+  const defaultValues: Skill = {
+    name: '',
+    skillType: '',
+    note: '',
   };
-  const methods = useForm<User>({
+  const methods = useForm<Skill>({
     defaultValues,
     resolver: zodResolver(schema),
   });
@@ -63,16 +66,16 @@ const UsersPage = () => {
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    dispatch(fetchUsers());
+    dispatch(fetchSkills());
   }, []);
   useEffect(() => {
     if (selectedAction === 'Add') {
       setIsOpenAddForm(true);
     } else if (selectedAction === 'Edit') {
       reset({
-        email: selectedUser?.email,
-        firstName: selectedUser?.firstName,
-        lastName: selectedUser?.lastName,
+        name: selectedSkill?.name,
+        skillType: selectedSkill?.skillType,
+        note: selectedSkill?.note,
       });
       setIsOpenEditForm(true);
     } else if (selectedAction === 'Delete') {
@@ -83,31 +86,35 @@ const UsersPage = () => {
   const handleAdd = async () => {
     const isValidate = await trigger();
     if (isValidate) {
-      await dispatch(addUser(getValues()));
-      await dispatch(fetchUsers());
+      await dispatch(addSkill(getValues()));
+      await dispatch(fetchSkills());
       reset(defaultValues);
-      setSelectedUser(null);
+      setSelectedSkill(null);
       setSelectedAction(null);
       setIsOpenAddForm(false);
     }
   };
   const handleEdit = async () => {
     const isValidate = await trigger();
-    if (isValidate && selectedUser?.id) {
-      const user: User = { firstName: getValues().firstName, lastName: getValues().lastName };
-      await dispatch(updateUser({ id: selectedUser?.id, user: user }));
-      await dispatch(fetchUsers());
+    if (isValidate && selectedSkill?.id) {
+      const skill: Skill = {
+        name: getValues().name,
+        skillType: getValues().skillType,
+        note: getValues().note,
+      };
+      await dispatch(updateSkill({ id: selectedSkill?.id, skill: skill }));
+      await dispatch(fetchSkills());
       reset(defaultValues);
-      setSelectedUser(null);
+      setSelectedSkill(null);
       setSelectedAction(null);
       setIsOpenEditForm(false);
     }
   };
   const handleDelete = async () => {
-    if (selectedUser?.id) {
-      await dispatch(deleteUser(selectedUser?.id));
-      await dispatch(fetchUsers());
-      setSelectedUser(null);
+    if (selectedSkill?.id) {
+      await dispatch(deleteSkill(selectedSkill?.id));
+      await dispatch(fetchSkills());
+      setSelectedSkill(null);
       setSelectedAction(null);
       setIsOpenDeleteModal(false);
     }
@@ -115,7 +122,7 @@ const UsersPage = () => {
 
   return (
     <Flex flexDirection={'column'} width={'100%'}>
-      <Navbar label={t('navbar.users')} />
+      <Navbar label={t('navbar.skills')} />
 
       <div
         style={{
@@ -125,19 +132,19 @@ const UsersPage = () => {
         }}
       >
         <TableLayout
-          data={users}
+          data={skill}
           cols={cols}
           action={{
-            setSelection: setSelectedUser,
+            setSelection: setSelectedSkill,
             setAction: setSelectedAction,
             actions: ['Add', 'Edit', 'Delete'],
           }}
         />
         {isOpenAddForm ? (
           <Form
-            label='AGGIUNGI NUOVO UTENTE'
+            label={t('pages.skills.add')}
             onCancel={() => {
-              setSelectedUser(null);
+              setSelectedSkill(null);
               setSelectedAction(null);
               reset(defaultValues);
               setIsOpenAddForm(false);
@@ -149,75 +156,40 @@ const UsersPage = () => {
             <Grid columnGap='10px' gridTemplateColumns={'1fr 1fr'}>
               <FormProvider {...methods}>
                 <InputField
-                  label={'Email'}
-                  name={'email'}
-                  placeholder='Email'
+                  label={t('pages.skills.table.cols.name')}
+                  name={'name'}
+                  placeholder={t('pages.skills.table.cols.name')}
                   style={{
                     display: 'flex',
                     flexDirection: 'column',
                     marginBottom: '13px',
                     fontSize: '20px',
                   }}
-                  error={errors.email?.message}
+                  error={errors.name?.message}
                 />
                 <InputField
-                  label={'Risorsa'}
-                  name={'resourceId'}
-                  placeholder='Risorsa'
+                  label={t('pages.skills.table.cols.skill-type')}
+                  name={'skillType'}
+                  placeholder={t('pages.skills.table.cols.skill-type')}
                   style={{
                     display: 'flex',
                     flexDirection: 'column',
                     marginBottom: '13px',
                     fontSize: '20px',
                   }}
+                  error={errors.skillType?.message}
                 />
                 <InputField
-                  label={'Nome'}
-                  name={'firstName'}
-                  placeholder='Nome'
+                  label={t('pages.skills.table.cols.note')}
+                  name={'note'}
+                  placeholder={t('pages.skills.table.cols.note')}
                   style={{
                     display: 'flex',
                     flexDirection: 'column',
                     marginBottom: '13px',
                     fontSize: '20px',
                   }}
-                  error={errors.firstName?.message}
-                />
-                <InputField
-                  label={'Cognome'}
-                  name={'lastName'}
-                  placeholder='Cognome'
-                  style={{
-                    display: 'flex',
-                    flexDirection: 'column',
-                    marginBottom: '13px',
-                    fontSize: '20px',
-                  }}
-                  error={errors.lastName?.message}
-                />
-                <InputField
-                  label={'Password'}
-                  name={'password'}
-                  placeholder='Password'
-                  style={{
-                    display: 'flex',
-                    flexDirection: 'column',
-                    marginBottom: '13px',
-                    fontSize: '20px',
-                  }}
-                  error={errors.password?.message}
-                />
-                <InputField
-                  label={'Conferma password'}
-                  name={'passwordConfirm'}
-                  placeholder='Conferma password'
-                  style={{
-                    display: 'flex',
-                    flexDirection: 'column',
-                    marginBottom: '13px',
-                    fontSize: '20px',
-                  }}
-                  error={errors.passwordConfirm?.message}
+                  error={errors.note?.message}
                 />
               </FormProvider>
             </Grid>
@@ -225,9 +197,9 @@ const UsersPage = () => {
         ) : null}
         {isOpenEditForm ? (
           <Form
-            label='MODIFICA UTENTE'
+            label={t('pages.skill.edit')}
             onCancel={() => {
-              setSelectedUser(null);
+              setSelectedSkill(null);
               setSelectedAction(null);
               reset(defaultValues);
               setIsOpenEditForm(false);
@@ -239,52 +211,40 @@ const UsersPage = () => {
             <Grid columnGap='10px' gridTemplateColumns={'1fr 1fr'}>
               <FormProvider {...methods}>
                 <InputField
-                  label={'Email'}
-                  name={'email'}
-                  placeholder='Email'
-                  isDisabled={true}
+                  label={t('pages.skills.table.cols.name')}
+                  name={'name'}
+                  placeholder={t('pages.skills.table.cols.name')}
                   style={{
                     display: 'flex',
                     flexDirection: 'column',
                     marginBottom: '13px',
                     fontSize: '20px',
                   }}
-                  error={errors.email?.message}
+                  error={errors.name?.message}
                 />
                 <InputField
-                  label={'Risorsa'}
-                  name={'resourceId'}
-                  placeholder='Risorsa'
+                  label={t('pages.skills.table.cols.skill-type')}
+                  name={'skillType'}
+                  placeholder={t('pages.skills.table.cols.skill-type')}
                   style={{
                     display: 'flex',
                     flexDirection: 'column',
                     marginBottom: '13px',
                     fontSize: '20px',
                   }}
+                  error={errors.skillType?.message}
                 />
                 <InputField
-                  label={'Nome'}
-                  name={'firstName'}
-                  placeholder='Nome'
+                  label={t('pages.skills.table.cols.note')}
+                  name={'note'}
+                  placeholder={t('pages.skills.table.cols.note')}
                   style={{
                     display: 'flex',
                     flexDirection: 'column',
                     marginBottom: '13px',
                     fontSize: '20px',
                   }}
-                  error={errors.firstName?.message}
-                />
-                <InputField
-                  label={'Cognome'}
-                  name={'lastName'}
-                  placeholder='Cognome'
-                  style={{
-                    display: 'flex',
-                    flexDirection: 'column',
-                    marginBottom: '13px',
-                    fontSize: '20px',
-                  }}
-                  error={errors.lastName?.message}
+                  error={errors.note?.message}
                 />
               </FormProvider>
             </Grid>
@@ -295,7 +255,7 @@ const UsersPage = () => {
       <Modal
         isOpen={isOpenDeleteModal}
         onOutsudeClick={() => {
-          setSelectedUser(null);
+          setSelectedSkill(null);
           setSelectedAction(null);
           setIsOpenDeleteModal(false);
         }}
@@ -309,18 +269,16 @@ const UsersPage = () => {
               margin: '60px 50px',
             }}
           >
-            {selectedUser ? (
+            {selectedSkill ? (
               <>
                 <span style={{ color: 'rgba(81, 70, 137, 1)' }}>
-                  Sei sicuro di voler eliminare{' '}
-                  <span
-                    style={{ color: 'rgba(239, 66, 111, 1)' }}
-                  >{`${selectedUser.firstName} ${selectedUser.lastName}`}</span>
+                  {t('utilities.table.confirm-delete') + ' '}
+                  <span style={{ color: 'rgba(239, 66, 111, 1)' }}>{selectedSkill.name}</span>
                 </span>
                 <Flex flexDirection='row' justifyContent='center' marginTop='45px'>
                   <ButtonComponent
                     onClick={() => {
-                      setSelectedUser(null);
+                      setSelectedSkill(null);
                       setSelectedAction(null);
                       setIsOpenDeleteModal(false);
                     }}
@@ -332,7 +290,7 @@ const UsersPage = () => {
                       width: '145px',
                     }}
                   >
-                    <Icons name='Close' size={28} color='rgba(81, 70, 137, 1)' /> Annulla
+                    <Icons name='Close' size={28} color='rgba(81, 70, 137, 1)' /> {t('cancel')}
                   </ButtonComponent>
                   <ButtonComponent
                     onClick={() => {
@@ -347,12 +305,12 @@ const UsersPage = () => {
                       marginLeft: '28px',
                     }}
                   >
-                    <Icons name='Confirm' size={28} color='white' /> Conferma
+                    <Icons name='Confirm' size={28} color='white' /> {t('confirm')}
                   </ButtonComponent>
                 </Flex>
               </>
             ) : (
-              <span style={{ color: 'rgba(81, 70, 137, 1)' }}>Nessun utente selezionato</span>
+              <span style={{ color: 'rgba(81, 70, 137, 1)' }}>{t('pages.skills.no-selected')}</span>
             )}
           </div>
         ) : null}
@@ -361,4 +319,4 @@ const UsersPage = () => {
   );
 };
 
-export default UsersPage;
+export default SkillsPage;

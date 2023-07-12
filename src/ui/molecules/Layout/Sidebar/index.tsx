@@ -5,10 +5,11 @@ import { SIDEBAR } from '../../../../utils/constant/sidebar';
 import ListElement from './ListElement';
 import { ROUTES } from '../../../../utils';
 import { removeTokenCookies } from '../../../../utils/auth';
+import { useTranslation } from 'react-i18next';
 
 const Sidebar = () => {
   const [sidebarIsOpen, setSidebarIsOpen] = useState(true);
-
+  const { t } = useTranslation();
   useEffect(() => {}, [location.pathname]);
 
   return (
@@ -103,7 +104,7 @@ const Sidebar = () => {
         />
         <div style={{ marginLeft: sidebarIsOpen ? '30px' : '0' }}>
           <ListElement
-            label='Log out'
+            label={t('sidebar.bottom-sidebar.log-out')}
             link={ROUTES.login}
             onClick={() => removeTokenCookies()}
             image='Logout'
@@ -112,7 +113,7 @@ const Sidebar = () => {
             setSidebarIsOpen={setSidebarIsOpen}
           />
           <ListElement
-            label='Modalità scura'
+            label={t('sidebar.bottom-sidebar.dark-mode')}
             link={null}
             image='WhiteMode'
             size={20}

@@ -49,4 +49,25 @@ export interface JwtTokenDecoded {
     hasDarkTheme?: boolean
   }
 
+  export interface Skill {
+    id?: number
+    name: string
+    skillType: string
+    note: string
+  }
+
+  export interface Job {
+    id?: number
+    code: string
+    description: string
+    customerId: number
+    startDate: Date
+    endDate: Date
+    jobType: string
+    estimatedCost: number
+    estimatedRevenue: number
+    state: string
+    note: string
+  }
+
   export type Actions = 'Add' | 'Edit' | 'Delete';

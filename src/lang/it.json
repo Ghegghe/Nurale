@@ -1,3 +1,108 @@
 {
-  "ciao": 23
+  "sidebar": {
+    "top-sidebar": {
+      "home": "Home",
+      "quick-insert": "Inserimento veloce",
+      "jobs": "Commesse",
+      "orders": "Ordini",
+      "activities": "Attività",
+      "personal-data": "Anagrafiche",
+      "customers": "Clienti",
+      "suppliers": "Fornitori",
+      "resources": "Risorse",
+      "resource-skill": "Skill delle risorse",
+      "purchases": "Acquisti",
+      "purchase-invoice": "Fattura d'acquisto",
+      "purchase-invoice-activity": "Fattura d'acquisto attività",
+      "sales": "Vendite",
+      "sales-invoices": "Fatture di vendita",
+      "timetable": "Scadenziario",
+      "scheduled-payments": "Scadenze",
+      "scheduled-values": "Pianificazione",
+      "settings": "Impostazioni",
+      "skills": "Abilità",
+      "type-of-payment": "Tipo di pagamento",
+      "users": "Utenti",
+      "timesheet": "Scheda attività",
+      "report": "Rapporti"
+    },
+    "bottom-sidebar": {
+      "log-out": "Esci",
+      "dark-mode": "Modalità scura"
+    }
+  },
+  "navbar": {
+    "home": "HOME",
+    "quick-insert": "INSERIMENTO VELOCE",
+    "jobs": "COMMESSE",
+    "orders": "ORDINI",
+    "activities": "ATTIVITÀ",
+    "personal-data": "ANAGRAFICHE",
+    "customers": "CLIENTI",
+    "suppliers": "FORNITORI",
+    "resources": "RISORSE",
+    "resource-skill": "SKILL DELLE RISORSE",
+    "purchases": "ACQUISTI",
+    "purchase-invoice": "FATTURA D'ACQUISTO",
+    "purchase-invoice-activity": "FATTURA D'ACQUISTO ATTIVITÀ",
+    "sales": "VENDITE",
+    "sales-invoices": "FATTIRA DI VENDITA",
+    "timetable": "SCADENZIARIO",
+    "scheduled-payments": "SCADENZE",
+    "scheduled-values": "PIANIFICAZIONE",
+    "settings": "IMPOSTAZIONI",
+    "skills": "ABILITÀ",
+    "type-of-payment": "TIPO DI PAGAMENTO",
+    "users": "UTENTI",
+    "timesheet": "SCHEDA ATTIVITÀ",
+    "report": "RAPPORTI"
+  },
+  "pages": {
+    "users": {
+      "table": {
+        "cols": {
+          "first-name": "Nome",
+          "last-name": "Cognome",
+          "email": "Email"
+        }
+      }
+    },
+    "skills": {
+      "table": {
+        "cols": {
+          "name": "Nome",
+          "skill-type": "Tipo di abilità",
+          "note": "Note"
+        },
+        "add": "AGGIUNGI NUOVA SKILL",
+        "edit": "MODIFICA SKILL",
+        "no-selected": "Nessuna skill selezionata"
+      }
+    },
+    "jobs": {
+      "table": {
+        "cols": {
+          "code": "Codice",
+          "description": "Descrizione",
+          "customer": "Cliente",
+          "start-date": "Data inizio",
+          "end-date": "Data fine",
+          "type-of-jobs": "Tipo di commessa",
+          "state": "Stato"
+        }
+      }
+    }
+  },
+  "utilities": {
+    "table": {
+      "actions": "Azioni",
+      "add": "Aggiungi nuovo",
+      "filter": "Filtra",
+      "confirm-delete": "Sei sicuro di voler eliminare"
+    },
+    "buttons": {
+      "confirm": "Conferma",
+      "cancel": "Annulla"
+    }
+  }
 }

@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Icons, Switch } from '../../../atoms';
 import { icons } from '../../../atoms/Icons';
 import { SwitchElement } from '../../../../utils';
+import { useTranslation } from 'react-i18next';
 
 interface Props extends HTMLAttributes<HTMLDivElement> {
   label: string;
@@ -31,6 +32,7 @@ function ListElement({
 }: Props) {
   const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
+  const { t } = useTranslation();
   const isInSubList = (subList: any[]) => {
     for (let i = 0; i < subList.length; i++) {
       if (location.pathname === subList[i].link) return true;
@@ -94,7 +96,7 @@ function ListElement({
                     : 'rgba(4, 30, 66, 1)',
               }}
             >
-              {label}
+              {t(label)}
             </div>
             {subList ? (
               <div style={{ alignSelf: 'center', marginLeft: 'auto' }}>
@@ -148,7 +150,7 @@ function ListElement({
                       : 'rgba(4, 30, 66, 1)',
                 }}
               >
-                {list.label}
+                {t(list.label)}
               </div>
             ))}
           </div>

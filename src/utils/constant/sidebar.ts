@@ -11,130 +11,132 @@ interface Sidebar {
     }[];
 }
 
+const base = 'sidebar.top-sidebar.'
+
 export const SIDEBAR: Sidebar[] = [
     {
-        label: 'Home',
+        label: base+'home',
         link: ROUTES.dashboard,
         image: 'Home',
     },
     {
-        label: 'Inserimento veloce',
+        label: base+'quick-insert',
         link: ROUTES.dashboard,
         image: 'Resources',
     },
     {
-        label: 'Commesse',
+        label: base+'jobs',
         link: null,
         image: 'Billing',
         subList: [
             {
-                label: 'Commesse', 
+                label: base+'jobs', 
                 link: ROUTES.dashboard,
             },
             {
-                label: 'Ordini', 
+                label: base+'orders', 
                 link: ROUTES.dashboard,
             },
             {
-                label: 'Attività', 
+                label: base+'activities', 
                 link: ROUTES.dashboard,
             },
         ]
     },
     {
-        label: 'Anagrafiche',
+        label: base+'personal-data',
         link: null,
         image: 'Client',
         subList: [
             {
-                label: 'Clienti', 
+                label: base+'customers', 
                 link: ROUTES.dashboard,
             },
             {
-                label: 'Fornitori', 
+                label: base+'suppliers', 
                 link: ROUTES.dashboard,
             },
             {
-                label: 'Risorse', 
+                label: base+'resources', 
                 link: ROUTES.dashboard,
             },
             {
-                label: 'Skills delle risorse', 
+                label: base+'resource-skill', 
                 link: ROUTES.dashboard,
             },
         ]
     },
     {
-        label: 'Acquisti',
+        label: base+'purchases',
         link: null,
         image: 'Billing',
         subList: [
             {
-                label: 'Fattura di acquisto', 
+                label: base+'purchase-invoice', 
                 link: ROUTES.dashboard,
             },
             {
-                label: 'Fattura di acquisto attività', 
+                label: base+'purchase-invoice-activity', 
                 link: ROUTES.dashboard,
             }
         ]
     },
     {
-        label: 'Vendite',
+        label: base+'sales',
         link: null,
         image: 'Billing',
         subList: [
             {
-                label: 'Fatture di vendita', 
+                label: base+'sales-invoices', 
                 link: ROUTES.dashboard,
             },
         ]
     },
     {
-        label: 'Scadenziario',
+        label: base+'timetable',
         link: null,
         image: 'Billing',
         subList: [
             {
-                label: 'Scadenze', 
+                label: base+'scheduled-payments', 
                 link: ROUTES.dashboard,
             },
             {
-                label: 'Pianificazione', 
+                label: base+'scheduled-values', 
                 link: ROUTES.dashboard,
             }
         ]
     },
     {
-        label: 'Impostazioni',
+        label: base+'settings',
         link: null,
         image: 'Setting',
         subList: [
             {
-                label: 'Skills', 
+                label: base+'skills', 
+                link: ROUTES.skills,
+            },
+            {
+                label: base+'type-of-payment', 
                 link: ROUTES.dashboard,
             },
             {
-                label: 'Tipi di pagamento', 
-                link: ROUTES.dashboard,
-            },
-            {
-                label: 'Utenti', 
+                label: base+'users', 
                 link: ROUTES.users,
             },
         ]
     },
     {
-        label: 'Timesheet',
+        label: base+'timesheet',
         link: null,
         image: 'Clock',
         subList: [
             {
-                label: 'Timesheet', 
+                label: base+'timesheet', 
                 link: ROUTES.dashboard,
             },
             {
-                label: 'Report', 
+                label: base+'report', 
                 link: ROUTES.dashboard,
             }
         ]

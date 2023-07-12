@@ -2,11 +2,10 @@ import { Flex, Grid } from '@chakra-ui/react';
 import { Navbar } from '../../molecules/Layout/Navbar';
 import '../styles/dashboard.css';
 import { useSelector } from 'react-redux';
-import { addUser, deleteUser, fetchUsers, getUsersData, updateUser } from '../../../store/users';
 import { createColumnHelper } from '@tanstack/react-table';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { FormProvider, useForm } from 'react-hook-form';
-import { User, Actions } from '../../../utils';
+import { Actions, Job } from '../../../utils';
 import { schema } from './validation';
 import { TableLayout } from '../../molecules/Layout/PageContent';
 import { useEffect, useState } from 'react';
@@ -20,7 +19,7 @@ const UsersPage = () => {
   const [isOpenAddForm, setIsOpenAddForm] = useState(false);
   const [isOpenEditForm, setIsOpenEditForm] = useState(false);
   const [isOpenDeleteModal, setIsOpenDeleteModal] = useState(false);
-  const [selectedUser, setSelectedUser] = useState<User | null>(null);
+  const [selectedJob, setSelectedJob] = useState<Job | null>(null);
   const [selectedAction, setSelectedAction] = useState<Actions | null>(null);
   const users = useSelector(getUsersData);
   const { t } = useTranslation();
@@ -41,15 +40,14 @@ const UsersPage = () => {
     }),
   ];
 
-  const defaultValues = {
-    email: '',
-    password: '',
-    passwordConfirm: '',
-    lastName: '',
-    firstName: '',
-    resourceId: null,
+  const defaultValues: Job = {
+    code: '',
+    customerId: 0,
+    description: '',
+    endDate: date,
+    estimatedCost: 0,
   };
-  const methods = useForm<User>({
+  const methods = useForm<Job>({
     defaultValues,
     resolver: zodResolver(schema),
   });
@@ -70,9 +68,9 @@ const UsersPage = () => {
       setIsOpenAddForm(true);
     } else if (selectedAction === 'Edit') {
       reset({
-        email: selectedUser?.email,
-        firstName: selectedUser?.firstName,
-        lastName: selectedUser?.lastName,
+        email: selectedJob?.email,
+        firstName: selectedJob?.firstName,
+        lastName: selectedJob?.lastName,
       });
       setIsOpenEditForm(true);
     } else if (selectedAction === 'Delete') {
@@ -86,28 +84,28 @@ const UsersPage = () => {
       await dispatch(addUser(getValues()));
       await dispatch(fetchUsers());
       reset(defaultValues);
-      setSelectedUser(null);
+      setSelectedJob(null);
       setSelectedAction(null);
       setIsOpenAddForm(false);
     }
   };
   const handleEdit = async () => {
     const isValidate = await trigger();
-    if (isValidate && selectedUser?.id) {
+    if (isValidate && selectedJob?.id) {
       const user: User = { firstName: getValues().firstName, lastName: getValues().lastName };
-      await dispatch(updateUser({ id: selectedUser?.id, user: user }));
+      await dispatch(updateUser({ id: selectedJob?.id, user: user }));
       await dispatch(fetchUsers());
       reset(defaultValues);
-      setSelectedUser(null);
+      setSelectedJob(null);
       setSelectedAction(null);
       setIsOpenEditForm(false);
     }
   };
   const handleDelete = async () => {
-    if (selectedUser?.id) {
-      await dispatch(deleteUser(selectedUser?.id));
+    if (selectedJob?.id) {
+      await dispatch(deleteUser(selectedJob?.id));
       await dispatch(fetchUsers());
-      setSelectedUser(null);
+      setSelectedJob(null);
       setSelectedAction(null);
       setIsOpenDeleteModal(false);
     }
@@ -128,7 +126,7 @@ const UsersPage = () => {
           data={users}
           cols={cols}
           action={{
-            setSelection: setSelectedUser,
+            setSelection: setSelectedJob,
             setAction: setSelectedAction,
             actions: ['Add', 'Edit', 'Delete'],
           }}
@@ -137,7 +135,7 @@ const UsersPage = () => {
           <Form
             label='AGGIUNGI NUOVO UTENTE'
             onCancel={() => {
-              setSelectedUser(null);
+              setSelectedJob(null);
               setSelectedAction(null);
               reset(defaultValues);
               setIsOpenAddForm(false);
@@ -227,7 +225,7 @@ const UsersPage = () => {
           <Form
             label='MODIFICA UTENTE'
             onCancel={() => {
-              setSelectedUser(null);
+              setSelectedJob(null);
               setSelectedAction(null);
               reset(defaultValues);
               setIsOpenEditForm(false);
@@ -295,7 +293,7 @@ const UsersPage = () => {
       <Modal
         isOpen={isOpenDeleteModal}
         onOutsudeClick={() => {
-          setSelectedUser(null);
+          setSelectedJob(null);
           setSelectedAction(null);
           setIsOpenDeleteModal(false);
         }}
@@ -309,18 +307,18 @@ const UsersPage = () => {
               margin: '60px 50px',
             }}
           >
-            {selectedUser ? (
+            {selectedJob ? (
               <>
                 <span style={{ color: 'rgba(81, 70, 137, 1)' }}>
                   Sei sicuro di voler eliminare{' '}
                   <span
                     style={{ color: 'rgba(239, 66, 111, 1)' }}
-                  >{`${selectedUser.firstName} ${selectedUser.lastName}`}</span>
+                  >{`${selectedJob.firstName} ${selectedJob.lastName}`}</span>
                 </span>
                 <Flex flexDirection='row' justifyContent='center' marginTop='45px'>
                   <ButtonComponent
                     onClick={() => {
-                      setSelectedUser(null);
+                      setSelectedJob(null);
                       setSelectedAction(null);
                       setIsOpenDeleteModal(false);
                     }}

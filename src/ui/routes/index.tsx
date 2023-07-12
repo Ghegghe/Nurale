@@ -1,4 +1,11 @@
-import { DashboardPage, LoginPage, RecoverPage, RegisterPage, UsersPage } from '../pages';
+import {
+  DashboardPage,
+  LoginPage,
+  RecoverPage,
+  RegisterPage,
+  SkillsPage,
+  UsersPage,
+} from '../pages';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { ROUTES } from '../../utils/constant';
 import Layout from '../molecules/Layout';
@@ -17,6 +24,7 @@ const AppRoutes = () => {
             <Route element={<Layout />}>
               <Route path={ROUTES.dashboard} element={<DashboardPage />} />
               <Route path={ROUTES.users} element={<UsersPage />} />
+              <Route path={ROUTES.skills} element={<SkillsPage />} />
               {/* <Route path={ROUTES.quickInsert} element={<DashboardPage />} />
               <Route path={ROUTES.jobs} element={<DashboardPage />} />
               <Route path={ROUTES.orders} element={<DashboardPage />} />
@@ -30,7 +38,7 @@ const AppRoutes = () => {
               <Route path={ROUTES.salesInvoices} element={<DashboardPage />} />
               <Route path={ROUTES.scheduledPayments} element={<DashboardPage />} />
               <Route path={ROUTES.scheduledValues} element={<DashboardPage />} />
-              <Route path={ROUTES.skills} element={<DashboardPage />} />
+              
               <Route path={ROUTES.typesOfPayments} element={<DashboardPage />} />
               
               <Route path={ROUTES.timesheet} element={<DashboardPage />} />

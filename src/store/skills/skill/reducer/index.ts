@@ -1,61 +1,62 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { initialStateUser } from "../types";
-import { deleteUser, updateUser, addUser } from "../actions";
+import { initialStateSkill } from "../types";
+import { deleteSkill, updateSkill, addSkill } from "../actions";
 
-const initialState: initialStateUser = {
+
+const initialState: initialStateSkill = {
     data: null,
     loading: false,
     error: null,
     pagination: 0
 }
 
-export const userReducer = createSlice({
-    name: 'user',
+export const skillReducer = createSlice({
+    name: 'skill',
     initialState,
     reducers: {},
     extraReducers: (builder) => {
         builder
-            .addCase(deleteUser.fulfilled, (state, action)=>
+            .addCase(deleteSkill.fulfilled, (state, action)=>
             {
                 state.data = action.payload.data; 
                 state.pagination = action.payload.pagination;
                 state.loading = false
             })
-            .addCase(deleteUser.pending, (state)=>
+            .addCase(deleteSkill.pending, (state)=>
             {
                 state.loading = true
             })
-            .addCase(deleteUser.rejected, (state)=>
+            .addCase(deleteSkill.rejected, (state)=>
             {
                 state.loading = false
                 state.error = 'Errore nel delete utente'
             })
-            .addCase(addUser.fulfilled, (state, action)=>
+            .addCase(addSkill.fulfilled, (state, action)=>
             {
                 state.data = action.payload.data; 
                 state.pagination = action.payload.pagination;
                 state.loading = false
             })
-            .addCase(addUser.pending, (state)=>
+            .addCase(addSkill.pending, (state)=>
             {
                 state.loading = true
             })
-            .addCase(addUser.rejected, (state)=>
+            .addCase(addSkill.rejected, (state)=>
             {
                 state.loading = false
                 state.error = 'Errore nel add utente'
             })
-            .addCase(updateUser.fulfilled, (state, action)=>
+            .addCase(updateSkill.fulfilled, (state, action)=>
             {
                 state.data = action.payload.data; 
                 state.pagination = action.payload.pagination;
                 state.loading = false
             })
-            .addCase(updateUser.pending, (state)=>
+            .addCase(updateSkill.pending, (state)=>
             {
                 state.loading = true
             })
-            .addCase(updateUser.rejected, (state)=>
+            .addCase(updateSkill.rejected, (state)=>
             {
                 state.loading = false
                 state.error = 'Errore nel update utente'

@@ -3,6 +3,7 @@ import { ButtonComponent, Icons } from '../../../atoms';
 import { flexRender, getCoreRowModel, useReactTable } from '@tanstack/react-table';
 import { useState } from 'react';
 import { Actions } from '../../../../utils';
+import { useTranslation } from 'react-i18next';
 
 interface Props {
   data: any[];
@@ -21,6 +22,7 @@ const TableLayout = ({ data, cols, action }: Props) => {
     getCoreRowModel: getCoreRowModel(),
   });
 
+  const { t } = useTranslation();
   const columnModel = tableIstance.getHeaderGroups();
   const rowModel = tableIstance.getRowModel();
 
@@ -43,7 +45,7 @@ const TableLayout = ({ data, cols, action }: Props) => {
             }}
           >
             <Icons name='Add' size={32} />
-            Aggiungi nuovo
+            {t('utilities.table.add')}
           </ButtonComponent>
         ) : null}
 
@@ -66,7 +68,7 @@ const TableLayout = ({ data, cols, action }: Props) => {
           ) : (
             <Icons name='MagnifyingGlass' size={32} color='white' />
           )}
-          Filtra
+          {t('utilities.table.filter')}
         </ButtonComponent>
       </Flex>
       {/* tabella */}
@@ -113,7 +115,7 @@ const TableLayout = ({ data, cols, action }: Props) => {
                     {flexRender(header.column.columnDef.header, header.getContext())}
                   </Th>
                 ))}
-                {action ? <Th>Azioni</Th> : null}
+                {action ? <Th>{t('utilities.table.actions')}</Th> : null}
               </Tr>
             ))}
           </Thead>
