@@ -2,11 +2,10 @@ import { Flex, Grid } from '@chakra-ui/react';
 import { Navbar } from '../../molecules/Layout/Navbar';
 import '../styles/dashboard.css';
 import { useSelector } from 'react-redux';
-import { addUser, deleteUser, fetchUsers, getUsersData, updateUser } from '../../../store/users';
 import { createColumnHelper } from '@tanstack/react-table';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { FormProvider, useForm } from 'react-hook-form';
-import { User, Actions, THEMES } from '../../../utils';
+import { Actions, Customer, THEMES } from '../../../utils';
 import { schema } from './validation';
 import { TableLayout } from '../../molecules/Layout/PageContent';
 import { useEffect, useState } from 'react';
@@ -15,41 +14,49 @@ import { ButtonComponent, Icons } from '../../atoms';
 import { InputField, Modal } from '../../molecules';
 import { Form } from '../../molecules/Modal';
 import { useTranslation } from 'react-i18next';
+import {
+  addCustomer,
+  deleteCustomer,
+  fetchCustomers,
+  getCustomersData,
+  getCustomersTotalCount,
+  updateCustomer,
+} from '../../../store';
 
-const UsersPage = () => {
+const CustomersPage = () => {
   const [isOpenAddForm, setIsOpenAddForm] = useState(false);
   const [isOpenEditForm, setIsOpenEditForm] = useState(false);
   const [isOpenDeleteModal, setIsOpenDeleteModal] = useState(false);
-  const [selectedUser, setSelectedUser] = useState<User | null>(null);
+  const [selectedCustomer, setSelectedCustomer] = useState<Customer | null>(null);
   const [selectedAction, setSelectedAction] = useState<Actions | null>(null);
-  const users = useSelector(getUsersData);
+  const customer = useSelector(getCustomersData);
+  const take = 10;
+  const totalCount = useSelector(getCustomersTotalCount);
+  const [page, setPage] = useState(1);
   const { t } = useTranslation();
   const columnHelper: any = createColumnHelper<any>();
 
   const cols = [
-    columnHelper.accessor('firstName', {
+    columnHelper.accessor('name', {
       cell: (Props: any) => Props.getValue(),
-      header: t('pages.users.table.cols.first-name'),
+      header: t('pages.customers.table.cols.name'),
     }),
-    columnHelper.accessor('lastName', {
+    columnHelper.accessor('typeOfPaymentId', {
       cell: (Props: any) => Props.getValue(),
-      header: t('pages.users.table.cols.last-name'),
+      header: t('pages.customers.table.cols.payment-type'),
     }),
-    columnHelper.accessor('email', {
+    columnHelper.accessor('note', {
       cell: (Props: any) => Props.getValue(),
-      header: t('pages.users.table.cols.email'),
+      header: t('pages.customers.table.cols.note'),
     }),
   ];
 
-  const defaultValues = {
-    email: '',
-    password: '',
-    passwordConfirm: '',
-    lastName: '',
-    firstName: '',
-    resourceId: null,
+  const defaultValues: Customer = {
+    name: '',
+    typeOfPaymentId: 0,
+    note: '',
   };
-  const methods = useForm<User>({
+  const methods = useForm<Customer>({
     defaultValues,
     resolver: zodResolver(schema),
   });
@@ -63,51 +70,63 @@ const UsersPage = () => {
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    dispatch(fetchUsers());
+    let skip = (page - 1) * take;
+    dispatch(fetchCustomers({ take, skip }));
   }, []);
   useEffect(() => {
     if (selectedAction === 'Add') {
       setIsOpenAddForm(true);
     } else if (selectedAction === 'Edit') {
       reset({
-        email: selectedUser?.email,
-        firstName: selectedUser?.firstName,
-        lastName: selectedUser?.lastName,
+        name: selectedCustomer?.name,
+        typeOfPaymentId: selectedCustomer?.typeOfPaymentId,
+        note: selectedCustomer?.note,
       });
       setIsOpenEditForm(true);
     } else if (selectedAction === 'Delete') {
       setIsOpenDeleteModal(true);
     }
   }, [selectedAction]);
+  useEffect(() => {
+    let skip = (page - 1) * take;
+    dispatch(fetchCustomers({ take, skip }));
+  }, [page]);
 
   const handleAdd = async () => {
     const isValidate = await trigger();
     if (isValidate) {
-      await dispatch(addUser(getValues()));
-      await dispatch(fetchUsers());
+      await dispatch(addCustomer(getValues()));
+      let skip = (page - 1) * take;
+      await dispatch(fetchCustomers({ take, skip }));
       reset(defaultValues);
-      setSelectedUser(null);
+      setSelectedCustomer(null);
       setSelectedAction(null);
       setIsOpenAddForm(false);
     }
   };
   const handleEdit = async () => {
     const isValidate = await trigger();
-    if (isValidate && selectedUser?.id) {
-      const user: User = { firstName: getValues().firstName, lastName: getValues().lastName };
-      await dispatch(updateUser({ id: selectedUser?.id, user: user }));
-      await dispatch(fetchUsers());
+    if (isValidate && selectedCustomer?.id) {
+      const customer: Customer = {
+        name: getValues().name,
+        typeOfPaymentId: getValues().typeOfPaymentId,
+        note: getValues().note,
+      };
+      await dispatch(updateCustomer({ id: selectedCustomer?.id, customer: customer }));
+      let skip = (page - 1) * take;
+      await dispatch(fetchCustomers({ take, skip }));
       reset(defaultValues);
-      setSelectedUser(null);
+      setSelectedCustomer(null);
       setSelectedAction(null);
       setIsOpenEditForm(false);
     }
   };
   const handleDelete = async () => {
-    if (selectedUser?.id) {
-      await dispatch(deleteUser(selectedUser?.id));
-      await dispatch(fetchUsers());
-      setSelectedUser(null);
+    if (selectedCustomer?.id) {
+      await dispatch(deleteCustomer(selectedCustomer?.id));
+      let skip = (page - 1) * take;
+      await dispatch(fetchCustomers({ take, skip }));
+      setSelectedCustomer(null);
       setSelectedAction(null);
       setIsOpenDeleteModal(false);
     }
@@ -115,7 +134,7 @@ const UsersPage = () => {
 
   return (
     <Flex flexDirection={'column'} width={'100%'}>
-      <Navbar label={t('navbar.users')} />
+      <Navbar label={t('navbar.customers')} />
 
       <div
         style={{
@@ -125,19 +144,24 @@ const UsersPage = () => {
         }}
       >
         <TableLayout
-          data={users}
+          data={customer}
           cols={cols}
           action={{
-            setSelection: setSelectedUser,
+            setSelection: setSelectedCustomer,
             setAction: setSelectedAction,
-            actions: ['Add', 'Edit', 'Delete'],
+            actions: ['Add', 'Edit', 'Delete', 'Paginate'],
+            page: {
+              page: page,
+              setPage: setPage,
+              nPages: Math.trunc(totalCount / take) + (totalCount % take ? 1 : 0),
+            },
           }}
         />
         {isOpenAddForm ? (
           <Form
-            label='AGGIUNGI NUOVO UTENTE'
+            label={t('pages.customers.table.add')}
             onCancel={() => {
-              setSelectedUser(null);
+              setSelectedCustomer(null);
               setSelectedAction(null);
               reset(defaultValues);
               setIsOpenAddForm(false);
@@ -153,75 +177,42 @@ const UsersPage = () => {
             >
               <FormProvider {...methods}>
                 <InputField
-                  label={'Email'}
-                  name={'email'}
-                  placeholder='Email'
+                  label={t('pages.customers.table.cols.name')}
+                  name={'name'}
+                  placeholder={t('pages.customers.table.cols.name')}
                   inputFontSize={THEMES.text.fontSize.px18}
                   style={{
                     display: 'flex',
                     flexDirection: 'column',
                     marginBottom: '13px',
                   }}
-                  error={errors.email?.message}
+                  error={errors.name?.message}
                 />
                 <InputField
-                  label={'Risorsa'}
-                  name={'resourceId'}
-                  placeholder='Risorsa'
+                  label={t('pages.customers.table.cols.payment-type')}
+                  name={'typeOfPaymentId'}
+                  placeholder={t('pages.customers.table.cols.payment-type')}
                   inputFontSize={THEMES.text.fontSize.px18}
+                  type='select'
+                  select={['Frontend', 'Backend', 'Designer', 'Administrator', 'Other']}
                   style={{
                     display: 'flex',
                     flexDirection: 'column',
                     marginBottom: '13px',
                   }}
+                  error={errors.typeOfPaymentId?.message}
                 />
                 <InputField
-                  label={'Nome'}
-                  name={'firstName'}
-                  placeholder='Nome'
+                  label={t('pages.customers.table.cols.note')}
+                  name={'note'}
+                  placeholder={t('pages.customers.table.cols.note')}
                   inputFontSize={THEMES.text.fontSize.px18}
                   style={{
                     display: 'flex',
                     flexDirection: 'column',
                     marginBottom: '13px',
                   }}
-                  error={errors.firstName?.message}
-                />
-                <InputField
-                  label={'Cognome'}
-                  name={'lastName'}
-                  placeholder='Cognome'
-                  inputFontSize={THEMES.text.fontSize.px18}
-                  style={{
-                    display: 'flex',
-                    flexDirection: 'column',
-                    marginBottom: '13px',
-                  }}
-                  error={errors.lastName?.message}
-                />
-                <InputField
-                  label={'Password'}
-                  name={'password'}
-                  placeholder='Password'
-                  inputFontSize={THEMES.text.fontSize.px18}
-                  style={{
-                    display: 'flex',
-                    flexDirection: 'column',
-                    marginBottom: '13px',
-                  }}
-                  error={errors.password?.message}
-                />
-                <InputField
-                  label={'Conferma password'}
-                  name={'passwordConfirm'}
-                  placeholder='Conferma password'
-                  inputFontSize={THEMES.text.fontSize.px18}
-                  style={{
-                    display: 'flex',
-                    flexDirection: 'column',
-                    marginBottom: '13px',
-                  }}
-                  error={errors.passwordConfirm?.message}
+                  error={errors.note?.message}
                 />
               </FormProvider>
             </Grid>
@@ -229,9 +220,9 @@ const UsersPage = () => {
         ) : null}
         {isOpenEditForm ? (
           <Form
-            label='MODIFICA UTENTE'
+            label={t('pages.customers.table.edit')}
             onCancel={() => {
-              setSelectedUser(null);
+              setSelectedCustomer(null);
               setSelectedAction(null);
               reset(defaultValues);
               setIsOpenEditForm(false);
@@ -247,52 +238,40 @@ const UsersPage = () => {
             >
               <FormProvider {...methods}>
                 <InputField
-                  label={'Email'}
-                  name={'email'}
-                  placeholder='Email'
+                  label={t('pages.customers.table.cols.name')}
+                  name={'name'}
+                  placeholder={t('pages.customers.table.cols.name')}
                   inputFontSize={THEMES.text.fontSize.px18}
-                  isDisabled={true}
                   style={{
                     display: 'flex',
                     flexDirection: 'column',
                     marginBottom: '13px',
                   }}
-                  error={errors.email?.message}
+                  error={errors.name?.message}
                 />
                 <InputField
-                  label={'Risorsa'}
-                  name={'resourceId'}
-                  placeholder='Risorsa'
+                  label={t('pages.customers.table.cols.payment-type')}
+                  name={'typeOfPaymentId'}
+                  placeholder={t('pages.customers.table.cols.payment-type')}
                   inputFontSize={THEMES.text.fontSize.px18}
                   style={{
                     display: 'flex',
                     flexDirection: 'column',
                     marginBottom: '13px',
                   }}
+                  error={errors.typeOfPaymentId?.message}
                 />
                 <InputField
-                  label={'Nome'}
-                  name={'firstName'}
-                  placeholder='Nome'
+                  label={t('pages.customers.table.cols.note')}
+                  name={'note'}
+                  placeholder={t('pages.customers.table.cols.note')}
                   inputFontSize={THEMES.text.fontSize.px18}
                   style={{
                     display: 'flex',
                     flexDirection: 'column',
                     marginBottom: '13px',
                   }}
-                  error={errors.firstName?.message}
-                />
-                <InputField
-                  label={'Cognome'}
-                  name={'lastName'}
-                  placeholder='Cognome'
-                  inputFontSize={THEMES.text.fontSize.px18}
-                  style={{
-                    display: 'flex',
-                    flexDirection: 'column',
-                    marginBottom: '13px',
-                  }}
-                  error={errors.lastName?.message}
+                  error={errors.note?.message}
                 />
               </FormProvider>
             </Grid>
@@ -303,7 +282,7 @@ const UsersPage = () => {
       <Modal
         isOpen={isOpenDeleteModal}
         onOutsudeClick={() => {
-          setSelectedUser(null);
+          setSelectedCustomer(null);
           setSelectedAction(null);
           setIsOpenDeleteModal(false);
         }}
@@ -316,18 +295,16 @@ const UsersPage = () => {
               margin: '60px 50px',
             }}
           >
-            {selectedUser ? (
+            {selectedCustomer ? (
               <>
                 <span style={{ color: THEMES.color.sIndigo }}>
-                  {t('utilities.table.confirm-delete')}
-                  <span
-                    style={{ color: THEMES.color.sDarkPink }}
-                  >{`${selectedUser.firstName} ${selectedUser.lastName}`}</span>
+                  {t('utilities.table.confirm-delete') + ' '}
+                  <span style={{ color: THEMES.color.sDarkPink }}>{selectedCustomer.name}</span>
                 </span>
                 <Flex flexDirection='row' justifyContent='center' marginTop='45px'>
                   <ButtonComponent
                     onClick={() => {
-                      setSelectedUser(null);
+                      setSelectedCustomer(null);
                       setSelectedAction(null);
                       setIsOpenDeleteModal(false);
                     }}
@@ -362,7 +339,7 @@ const UsersPage = () => {
               </>
             ) : (
               <span style={{ color: THEMES.color.sIndigo }}>
-                {t('pages.users.table.no-selected')}
+                {t('pages.customers.no-selected')}
               </span>
             )}
           </div>
@@ -372,4 +349,4 @@ const UsersPage = () => {
   );
 };
 
-export default UsersPage;
+export default CustomersPage;

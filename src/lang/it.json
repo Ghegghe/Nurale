@@ -96,6 +96,18 @@
         "no-selected": "Nessun tipo di pagamento selezionato"
       }
     },
+    "customers": {
+      "table": {
+        "cols": {
+          "name": "Nome",
+          "payment-type": "Tipo di pagamento",
+          "note": "Note"
+        },
+        "add": "AGGIUNGI NUOVO CLIENTE",
+        "edit": "MODIFICA CLIENTE",
+        "no-selected": "Nessun cliente selezionato"
+      }
+    },
     "jobs": {
       "table": {
         "cols": {

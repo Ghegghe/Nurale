@@ -50,7 +50,7 @@ export const SIDEBAR: Sidebar[] = [
         subList: [
             {
                 label: base+'customers', 
-                link: ROUTES.dashboard,
+                link: ROUTES.customers,
             },
             {
                 label: base+'suppliers', 

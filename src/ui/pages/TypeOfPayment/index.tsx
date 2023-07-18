@@ -1,4 +1,4 @@
-import { Flex, Grid, Th } from '@chakra-ui/react';
+import { Flex, Grid } from '@chakra-ui/react';
 import { Navbar } from '../../molecules/Layout/Navbar';
 import '../styles/dashboard.css';
 import { useSelector } from 'react-redux';
@@ -86,7 +86,8 @@ const TypeOfPaymentsPage = () => {
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    dispatch(fetchTypeOfPayments());
+    let skip = (page - 1) * take;
+    dispatch(fetchTypeOfPayments({ take, skip }));
   }, []);
   useEffect(() => {
     if (selectedAction === 'Add') {
@@ -106,12 +107,17 @@ const TypeOfPaymentsPage = () => {
       setIsOpenDeleteModal(true);
     }
   }, [selectedAction]);
+  useEffect(() => {
+    let skip = (page - 1) * take;
+    dispatch(fetchTypeOfPayments({ take, skip }));
+  }, [page]);
 
   const handleAdd = async () => {
     const isValidate = await trigger();
     if (isValidate) {
       await dispatch(addTypeOfPayment(getValues()));
-      await dispatch(fetchTypeOfPayments());
+      let skip = (page - 1) * take;
+      await dispatch(fetchTypeOfPayments({ take, skip }));
       reset(defaultValues);
       setSelectedTypeOfPayment(null);
       setSelectedAction(null);
@@ -133,7 +139,8 @@ const TypeOfPaymentsPage = () => {
       await dispatch(
         updateTypeOfPayment({ id: selectedTypeOfPayment?.id, typeOfPayment: typeOfPayment }),
       );
-      await dispatch(fetchTypeOfPayments());
+      let skip = (page - 1) * take;
+      await dispatch(fetchTypeOfPayments({ take, skip }));
       reset(defaultValues);
       setSelectedTypeOfPayment(null);
       setSelectedAction(null);
@@ -143,7 +150,8 @@ const TypeOfPaymentsPage = () => {
   const handleDelete = async () => {
     if (selectedTypeOfPayment?.id) {
       await dispatch(deleteTypeOfPayment(selectedTypeOfPayment?.id));
-      await dispatch(fetchTypeOfPayments());
+      let skip = (page - 1) * take;
+      await dispatch(fetchTypeOfPayments({ take, skip }));
       setSelectedTypeOfPayment(null);
       setSelectedAction(null);
       setIsOpenDeleteModal(false);
