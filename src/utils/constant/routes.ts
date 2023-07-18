@@ -18,7 +18,7 @@ export const ROUTES = {
     scheduledPayments: '/scheduled-payments',
     scheduledValues: '/scheduled-values',
     skills: '/skills',
-    typesOfPayments: '/types-of-payments',
+    typeOfPayments: '/type-of-payments',
     users: '/users',
     timesheet: '/timesheet',
     report: '/report',

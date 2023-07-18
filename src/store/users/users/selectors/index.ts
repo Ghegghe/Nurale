@@ -7,3 +7,7 @@ export const getUsersData = createSelector(
     getUsersState,
     (state)=>state.data
 )
+export const getUsersTotalCount = createSelector(
+    getUsersState,
+    (state)=>state.totalCount
+)

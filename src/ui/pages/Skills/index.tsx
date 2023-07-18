@@ -5,7 +5,7 @@ import { useSelector } from 'react-redux';
 import { createColumnHelper } from '@tanstack/react-table';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { FormProvider, useForm } from 'react-hook-form';
-import { Actions, Skill } from '../../../utils';
+import { Actions, Skill, THEMES } from '../../../utils';
 import { schema } from './validation';
 import { TableLayout } from '../../molecules/Layout/PageContent';
 import { useEffect, useState } from 'react';
@@ -19,6 +19,7 @@ import {
   deleteSkill,
   fetchSkills,
   getSkillsData,
+  getSkillsTotalCount,
   updateSkill,
 } from '../../../store/skills';
 
@@ -29,6 +30,9 @@ const SkillsPage = () => {
   const [selectedSkill, setSelectedSkill] = useState<Skill | null>(null);
   const [selectedAction, setSelectedAction] = useState<Actions | null>(null);
   const skill = useSelector(getSkillsData);
+  const take = 10;
+  const totalCount = useSelector(getSkillsTotalCount);
+  const [page, setPage] = useState(1);
   const { t } = useTranslation();
   const columnHelper: any = createColumnHelper<any>();
 
@@ -37,7 +41,7 @@ const SkillsPage = () => {
       cell: (Props: any) => Props.getValue(),
       header: t('pages.skills.table.cols.name'),
     }),
-    columnHelper.accessor('skill-type', {
+    columnHelper.accessor('skillType', {
       cell: (Props: any) => Props.getValue(),
       header: t('pages.skills.table.cols.skill-type'),
     }),
@@ -66,7 +70,8 @@ const SkillsPage = () => {
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    dispatch(fetchSkills());
+    let skip = (page - 1) * take;
+    dispatch(fetchSkills({ take, skip }));
   }, []);
   useEffect(() => {
     if (selectedAction === 'Add') {
@@ -82,12 +87,17 @@ const SkillsPage = () => {
       setIsOpenDeleteModal(true);
     }
   }, [selectedAction]);
+  useEffect(() => {
+    let skip = (page - 1) * take;
+    dispatch(fetchSkills({ take, skip }));
+  }, [page]);
 
   const handleAdd = async () => {
     const isValidate = await trigger();
     if (isValidate) {
       await dispatch(addSkill(getValues()));
-      await dispatch(fetchSkills());
+      let skip = (page - 1) * take;
+      await dispatch(fetchSkills({ take, skip }));
       reset(defaultValues);
       setSelectedSkill(null);
       setSelectedAction(null);
@@ -103,7 +113,8 @@ const SkillsPage = () => {
         note: getValues().note,
       };
       await dispatch(updateSkill({ id: selectedSkill?.id, skill: skill }));
-      await dispatch(fetchSkills());
+      let skip = (page - 1) * take;
+      await dispatch(fetchSkills({ take, skip }));
       reset(defaultValues);
       setSelectedSkill(null);
       setSelectedAction(null);
@@ -113,7 +124,8 @@ const SkillsPage = () => {
   const handleDelete = async () => {
     if (selectedSkill?.id) {
       await dispatch(deleteSkill(selectedSkill?.id));
-      await dispatch(fetchSkills());
+      let skip = (page - 1) * take;
+      await dispatch(fetchSkills({ take, skip }));
       setSelectedSkill(null);
       setSelectedAction(null);
       setIsOpenDeleteModal(false);
@@ -137,12 +149,17 @@ const SkillsPage = () => {
           action={{
             setSelection: setSelectedSkill,
             setAction: setSelectedAction,
-            actions: ['Add', 'Edit', 'Delete'],
+            actions: ['Add', 'Edit', 'Delete', 'Paginate'],
+            page: {
+              page: page,
+              setPage: setPage,
+              nPages: Math.trunc(totalCount / take) + (totalCount % take ? 1 : 0),
+            },
           }}
         />
         {isOpenAddForm ? (
           <Form
-            label={t('pages.skills.add')}
+            label={t('pages.skills.table.add')}
             onCancel={() => {
               setSelectedSkill(null);
               setSelectedAction(null);
@@ -153,17 +170,21 @@ const SkillsPage = () => {
               handleAdd();
             }}
           >
-            <Grid columnGap='10px' gridTemplateColumns={'1fr 1fr'}>
+            <Grid
+              columnGap='10px'
+              gridTemplateColumns={'1fr 1fr'}
+              fontSize={THEMES.text.fontSize.px18}
+            >
               <FormProvider {...methods}>
                 <InputField
                   label={t('pages.skills.table.cols.name')}
                   name={'name'}
                   placeholder={t('pages.skills.table.cols.name')}
+                  inputFontSize={THEMES.text.fontSize.px18}
                   style={{
                     display: 'flex',
                     flexDirection: 'column',
                     marginBottom: '13px',
-                    fontSize: '20px',
                   }}
                   error={errors.name?.message}
                 />
@@ -171,11 +192,13 @@ const SkillsPage = () => {
                   label={t('pages.skills.table.cols.skill-type')}
                   name={'skillType'}
                   placeholder={t('pages.skills.table.cols.skill-type')}
+                  inputFontSize={THEMES.text.fontSize.px18}
+                  type='select'
+                  select={['Frontend', 'Backend', 'Designer', 'Administrator', 'Other']}
                   style={{
                     display: 'flex',
                     flexDirection: 'column',
                     marginBottom: '13px',
-                    fontSize: '20px',
                   }}
                   error={errors.skillType?.message}
                 />
@@ -183,11 +206,11 @@ const SkillsPage = () => {
                   label={t('pages.skills.table.cols.note')}
                   name={'note'}
                   placeholder={t('pages.skills.table.cols.note')}
+                  inputFontSize={THEMES.text.fontSize.px18}
                   style={{
                     display: 'flex',
                     flexDirection: 'column',
                     marginBottom: '13px',
-                    fontSize: '20px',
                   }}
                   error={errors.note?.message}
                 />
@@ -197,7 +220,7 @@ const SkillsPage = () => {
         ) : null}
         {isOpenEditForm ? (
           <Form
-            label={t('pages.skill.edit')}
+            label={t('pages.skills.table.edit')}
             onCancel={() => {
               setSelectedSkill(null);
               setSelectedAction(null);
@@ -208,17 +231,21 @@ const SkillsPage = () => {
               handleEdit();
             }}
           >
-            <Grid columnGap='10px' gridTemplateColumns={'1fr 1fr'}>
+            <Grid
+              columnGap='10px'
+              gridTemplateColumns={'1fr 1fr'}
+              fontSize={THEMES.text.fontSize.px18}
+            >
               <FormProvider {...methods}>
                 <InputField
                   label={t('pages.skills.table.cols.name')}
                   name={'name'}
                   placeholder={t('pages.skills.table.cols.name')}
+                  inputFontSize={THEMES.text.fontSize.px18}
                   style={{
                     display: 'flex',
                     flexDirection: 'column',
                     marginBottom: '13px',
-                    fontSize: '20px',
                   }}
                   error={errors.name?.message}
                 />
@@ -226,11 +253,11 @@ const SkillsPage = () => {
                   label={t('pages.skills.table.cols.skill-type')}
                   name={'skillType'}
                   placeholder={t('pages.skills.table.cols.skill-type')}
+                  inputFontSize={THEMES.text.fontSize.px18}
                   style={{
                     display: 'flex',
                     flexDirection: 'column',
                     marginBottom: '13px',
-                    fontSize: '20px',
                   }}
                   error={errors.skillType?.message}
                 />
@@ -238,11 +265,11 @@ const SkillsPage = () => {
                   label={t('pages.skills.table.cols.note')}
                   name={'note'}
                   placeholder={t('pages.skills.table.cols.note')}
+                  inputFontSize={THEMES.text.fontSize.px18}
                   style={{
                     display: 'flex',
                     flexDirection: 'column',
                     marginBottom: '13px',
-                    fontSize: '20px',
                   }}
                   error={errors.note?.message}
                 />
@@ -263,17 +290,16 @@ const SkillsPage = () => {
         {selectedAction === 'Delete' ? (
           <div
             style={{
-              fontSize: '22px',
-              fontWeight: '700',
-              color: 'rgba(81, 70, 137, 1)',
+              fontSize: THEMES.text.fontSize.px22,
+              fontWeight: THEMES.text.fontWeight.w700,
               margin: '60px 50px',
             }}
           >
             {selectedSkill ? (
               <>
-                <span style={{ color: 'rgba(81, 70, 137, 1)' }}>
+                <span style={{ color: THEMES.color.sIndigo }}>
                   {t('utilities.table.confirm-delete') + ' '}
-                  <span style={{ color: 'rgba(239, 66, 111, 1)' }}>{selectedSkill.name}</span>
+                  <span style={{ color: THEMES.color.sDarkPink }}>{selectedSkill.name}</span>
                 </span>
                 <Flex flexDirection='row' justifyContent='center' marginTop='45px'>
                   <ButtonComponent
@@ -283,34 +309,36 @@ const SkillsPage = () => {
                       setIsOpenDeleteModal(false);
                     }}
                     style={{
-                      color: 'rgba(81, 70, 137, 1)',
-                      background: 'rgba(81, 70, 137, 0.3)',
-                      fontSize: '22px',
-                      fontWeight: '700',
+                      color: THEMES.color.sIndigo,
+                      background: THEMES.color.a30Indigo,
+                      fontSize: THEMES.text.fontSize.px22,
+                      fontWeight: THEMES.text.fontWeight.w700,
                       width: '145px',
                     }}
                   >
-                    <Icons name='Close' size={28} color='rgba(81, 70, 137, 1)' /> {t('cancel')}
+                    <Icons name='Close' size={28} color={THEMES.color.sIndigo} />{' '}
+                    {t('utilities.buttons.cancel')}
                   </ButtonComponent>
                   <ButtonComponent
                     onClick={() => {
                       handleDelete();
                     }}
                     style={{
-                      color: 'white',
-                      background: 'rgba(239, 66, 111, 1)',
-                      fontSize: '22px',
-                      fontWeight: '700',
+                      color: THEMES.color.sWhite,
+                      background: THEMES.color.sDarkPink,
+                      fontSize: THEMES.text.fontSize.px22,
+                      fontWeight: THEMES.text.fontWeight.w700,
                       width: '145px',
                       marginLeft: '28px',
                     }}
                   >
-                    <Icons name='Confirm' size={28} color='white' /> {t('confirm')}
+                    <Icons name='Confirm' size={28} color={THEMES.color.sWhite} />{' '}
+                    {t('utilities.buttons.confirm')}
                   </ButtonComponent>
                 </Flex>
               </>
             ) : (
-              <span style={{ color: 'rgba(81, 70, 137, 1)' }}>{t('pages.skills.no-selected')}</span>
+              <span style={{ color: THEMES.color.sIndigo }}>{t('pages.skills.no-selected')}</span>
             )}
           </div>
         ) : null}

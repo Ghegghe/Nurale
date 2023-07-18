@@ -2,7 +2,7 @@ import { Flex, Table, TableContainer, Tbody, Td, Th, Thead, Tr } from '@chakra-u
 import { ButtonComponent, Icons } from '../../../atoms';
 import { flexRender, getCoreRowModel, useReactTable } from '@tanstack/react-table';
 import { useState } from 'react';
-import { Actions } from '../../../../utils';
+import { Actions, THEMES } from '../../../../utils';
 import { useTranslation } from 'react-i18next';
 
 interface Props {
@@ -12,6 +12,11 @@ interface Props {
     setSelection: (Prop: any) => void;
     setAction: (Prop: Actions) => void;
     actions: Actions[];
+    page?: {
+      page: number;
+      setPage: (Prop: number) => void;
+      nPages: number;
+    };
   };
 }
 
@@ -36,11 +41,11 @@ const TableLayout = ({ data, cols, action }: Props) => {
           <ButtonComponent
             onClick={() => action.setAction('Add')}
             style={{
-              background: 'rgba(239, 66, 111, 1)',
+              background: THEMES.color.sDarkPink,
               border: 'none',
-              borderRadius: '10px',
-              color: 'white',
-              fontSize: '20px',
+              borderRadius: THEMES.border.radius.px10,
+              color: THEMES.color.sWhite,
+              fontSize: THEMES.text.fontSize.px20,
               padding: '8px 15px 8px 15px',
             }}
           >
@@ -52,11 +57,11 @@ const TableLayout = ({ data, cols, action }: Props) => {
         <ButtonComponent
           onClick={() => setIsOpenFilter(!isOpenFilter)}
           style={{
-            background: 'rgba(239, 66, 111, 1)',
+            background: THEMES.color.sDarkPink,
             border: 'none',
-            borderRadius: '10px',
-            color: 'white',
-            fontSize: '20px',
+            borderRadius: THEMES.border.radius.px10,
+            color: THEMES.color.sWhite,
+            fontSize: THEMES.text.fontSize.px20,
             padding: '8px 15px 8px 15px',
             marginLeft: 'auto',
             width: '110px',
@@ -66,7 +71,7 @@ const TableLayout = ({ data, cols, action }: Props) => {
           {isOpenFilter ? (
             <Icons name='Add' size={32} rotation='45deg' />
           ) : (
-            <Icons name='MagnifyingGlass' size={32} color='white' />
+            <Icons name='MagnifyingGlass' size={32} color={THEMES.color.sWhite} />
           )}
           {t('utilities.table.filter')}
         </ButtonComponent>
@@ -75,20 +80,20 @@ const TableLayout = ({ data, cols, action }: Props) => {
 
       <TableContainer
         style={{
-          border: '1px solid rgba(81, 70, 137, 0.7)',
-          borderRadius: '10px',
+          border: `1px solid ${THEMES.color.a70Indigo}`,
+          borderRadius: THEMES.border.radius.px10,
           margin: '15px 0 15px 0',
           height: '100%',
-          fontSize: '20px',
+          fontSize: THEMES.text.fontSize.px20,
           position: 'relative',
         }}
       >
         {isOpenFilter ? (
           <Flex
             flexDirection='column'
-            background='white'
-            borderRadius='10px'
-            boxShadow='-2px 2px 4px 0px rgba(81, 70, 137, 0.3)'
+            background={THEMES.color.sWhite}
+            borderRadius={THEMES.border.radius.px10}
+            boxShadow={`-2px 2px 4px 0px ${THEMES.color.a30Indigo}`}
             position='absolute'
             zIndex='10'
             width='310px'
@@ -98,7 +103,7 @@ const TableLayout = ({ data, cols, action }: Props) => {
             <Flex flexDirection='row' padding='17px' alignItems='center'>
               <span>Filtri</span>
               <div style={{ marginLeft: 'auto' }} onClick={() => setIsOpenFilter(!isOpenFilter)}>
-                <Icons name='Close' size={24} color='rgba(81, 70, 137, 1)' />
+                <Icons name='Close' size={24} color={THEMES.color.sIndigo} />
               </div>
             </Flex>
             <hr className='hrgray' style={{ margin: '0 17px 0 17px' }} />
@@ -135,7 +140,7 @@ const TableLayout = ({ data, cols, action }: Props) => {
                         }}
                         style={{ marginRight: '5px' }}
                       >
-                        <Icons name='Edit' size={26} color='rgba(81, 70, 137, 0.5)' />
+                        <Icons name='Edit' size={26} color={THEMES.color.a50Indigo} />
                       </span>
                     ) : null}
                     {action.actions.includes('Delete') ? (
@@ -146,7 +151,7 @@ const TableLayout = ({ data, cols, action }: Props) => {
                         }}
                         style={{ marginRight: '5px' }}
                       >
-                        <Icons name='Delete' size={26} color='rgba(239, 66, 111, 1)' />
+                        <Icons name='Delete' size={26} color={THEMES.color.sDarkPink} />
                       </span>
                     ) : null}
                   </Td>
@@ -157,43 +162,63 @@ const TableLayout = ({ data, cols, action }: Props) => {
         </Table>
       </TableContainer>
       {/* sotto tabella */}
-      <Flex flexDirection={'row'} alignItems={'center'} margin='0 15px 0 auto'>
-        Pagina
-        <div
-          style={{
-            border: '1px solid rgba(81, 70, 137, 0.7)',
-            borderRadius: '5px',
-            margin: '0 10px 0 10px',
-            width: '70px',
-            padding: '3px',
-          }}
-        >
-          1
-        </div>
-        di 10
-        <Flex
-          background='rgba(81, 70, 137, 0.7)'
-          borderRadius='5px'
-          width='28px'
-          height='28px'
-          alignItems='center'
-          justifyContent='center'
-          marginLeft='20px'
-        >
-          <Icons name='LeftArrow' size={16} />
+      {action?.actions.includes('Paginate') && action.page ? (
+        <Flex flexDirection={'row'} alignItems={'center'} margin='0 15px 0 auto'>
+          Pagina
+          <div
+            style={{
+              border: `1px solid ${THEMES.color.a70Indigo}`,
+              borderRadius: THEMES.border.radius.px5,
+              margin: '0 10px 0 10px',
+              width: '70px',
+              padding: '3px',
+            }}
+          >
+            {action.page?.page}
+          </div>
+          di {action.page.nPages}
+          <Flex
+            background={action.page.page > 1 ? THEMES.color.a70Indigo : THEMES.color.a30Indigo}
+            borderRadius={THEMES.border.radius.px5}
+            width='28px'
+            height='28px'
+            alignItems='center'
+            justifyContent='center'
+            marginLeft='20px'
+            onClick={
+              action.page.page > 1
+                ? () => {
+                    action.page?.setPage(action.page.page - 1);
+                  }
+                : () => {}
+            }
+          >
+            <Icons name='LeftArrow' size={16} />
+          </Flex>
+          <Flex
+            background={
+              action.page.page < action.page.nPages
+                ? THEMES.color.a70Indigo
+                : THEMES.color.a30Indigo
+            }
+            borderRadius={THEMES.border.radius.px5}
+            width='28px'
+            height='28px'
+            alignItems='center'
+            justifyContent='center'
+            marginLeft='10px'
+            onClick={
+              action.page.page < action.page.nPages
+                ? () => {
+                    action.page?.setPage(action.page.page + 1);
+                  }
+                : () => {}
+            }
+          >
+            <Icons name='RightArrow' size={16} />
+          </Flex>
         </Flex>
-        <Flex
-          background='rgba(81, 70, 137, 0.7)'
-          borderRadius='5px'
-          width='28px'
-          height='28px'
-          alignItems='center'
-          justifyContent='center'
-          marginLeft='10px'
-        >
-          <Icons name='RightArrow' size={16} />
-        </Flex>
-      </Flex>
+      ) : null}
     </Flex>
   );
 };

@@ -56,6 +56,57 @@ export interface JwtTokenDecoded {
     note: string
   }
 
+  export interface TypeOfPayment {
+    id?: number
+    name: string
+    daysToFirstPayment: number | null
+    daysBetweenPayments: number | null
+    numberOfPayments: number | null
+    movePaymentsToTheEndOfMonth: boolean | null
+    daysOffsetPayments: number | null
+    note: string
+  }
+
+  export interface Customer {
+    id?: number
+    name: string,
+    typeOfPaymentId: number,
+    note: string
+  }
+
+  export interface Supplier {
+    id?: number
+    name: string,
+    typeOfPaymentId: number,
+    note: string
+  }
+  export interface Resource {
+    firstName: string,
+    lastName: string,
+    hourCost: number,
+    hourRevenue: number,
+    curriculumVitae: string,
+    supplierId: number,
+    note: string
+  }
+
+  export interface ResourceSkill {
+    resourceId: number,
+    skillId: number,
+    level: number,
+    note: string
+  }
+
+export interface PurchaseInvoiceActivity {
+  purchasesInvoiceId: number,
+  activityId: number,
+  orderId: number,
+  jobId: number,
+  resourceId: number,
+  quantity: number,
+  value: number
+}
+
   export interface Job {
     id?: number
     code: string
@@ -70,4 +121,4 @@ export interface JwtTokenDecoded {
     note: string
   }
 
-  export type Actions = 'Add' | 'Edit' | 'Delete';
+  export type Actions = 'Add' | 'Edit' | 'Delete' | 'Paginate' | 'Filter';

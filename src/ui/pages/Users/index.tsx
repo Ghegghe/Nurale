@@ -2,11 +2,18 @@ import { Flex, Grid } from '@chakra-ui/react';
 import { Navbar } from '../../molecules/Layout/Navbar';
 import '../styles/dashboard.css';
 import { useSelector } from 'react-redux';
-import { addUser, deleteUser, fetchUsers, getUsersData, updateUser } from '../../../store/users';
+import {
+  addUser,
+  deleteUser,
+  fetchUsers,
+  getUsersData,
+  getUsersTotalCount,
+  updateUser,
+} from '../../../store/users';
 import { createColumnHelper } from '@tanstack/react-table';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { FormProvider, useForm } from 'react-hook-form';
-import { User, Actions } from '../../../utils';
+import { User, Actions, THEMES } from '../../../utils';
 import { schema } from './validation';
 import { TableLayout } from '../../molecules/Layout/PageContent';
 import { useEffect, useState } from 'react';
@@ -23,6 +30,9 @@ const UsersPage = () => {
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
   const [selectedAction, setSelectedAction] = useState<Actions | null>(null);
   const users = useSelector(getUsersData);
+  const take = 10;
+  const totalCount = useSelector(getUsersTotalCount);
+  const [page, setPage] = useState(1);
   const { t } = useTranslation();
   const columnHelper: any = createColumnHelper<any>();
 
@@ -130,7 +140,12 @@ const UsersPage = () => {
           action={{
             setSelection: setSelectedUser,
             setAction: setSelectedAction,
-            actions: ['Add', 'Edit', 'Delete'],
+            actions: ['Add', 'Edit', 'Delete', 'Paginate'],
+            page: {
+              page: page,
+              setPage: setPage,
+              nPages: Math.trunc(totalCount / take) + (totalCount % take ? 1 : 0),
+            },
           }}
         />
         {isOpenAddForm ? (
@@ -146,17 +161,21 @@ const UsersPage = () => {
               handleAdd();
             }}
           >
-            <Grid columnGap='10px' gridTemplateColumns={'1fr 1fr'}>
+            <Grid
+              columnGap='10px'
+              gridTemplateColumns={'1fr 1fr'}
+              fontSize={THEMES.text.fontSize.px18}
+            >
               <FormProvider {...methods}>
                 <InputField
                   label={'Email'}
                   name={'email'}
                   placeholder='Email'
+                  inputFontSize={THEMES.text.fontSize.px18}
                   style={{
                     display: 'flex',
                     flexDirection: 'column',
                     marginBottom: '13px',
-                    fontSize: '20px',
                   }}
                   error={errors.email?.message}
                 />
@@ -164,22 +183,22 @@ const UsersPage = () => {
                   label={'Risorsa'}
                   name={'resourceId'}
                   placeholder='Risorsa'
+                  inputFontSize={THEMES.text.fontSize.px18}
                   style={{
                     display: 'flex',
                     flexDirection: 'column',
                     marginBottom: '13px',
-                    fontSize: '20px',
                   }}
                 />
                 <InputField
                   label={'Nome'}
                   name={'firstName'}
                   placeholder='Nome'
+                  inputFontSize={THEMES.text.fontSize.px18}
                   style={{
                     display: 'flex',
                     flexDirection: 'column',
                     marginBottom: '13px',
-                    fontSize: '20px',
                   }}
                   error={errors.firstName?.message}
                 />
@@ -187,11 +206,11 @@ const UsersPage = () => {
                   label={'Cognome'}
                   name={'lastName'}
                   placeholder='Cognome'
+                  inputFontSize={THEMES.text.fontSize.px18}
                   style={{
                     display: 'flex',
                     flexDirection: 'column',
                     marginBottom: '13px',
-                    fontSize: '20px',
                   }}
                   error={errors.lastName?.message}
                 />
@@ -199,11 +218,11 @@ const UsersPage = () => {
                   label={'Password'}
                   name={'password'}
                   placeholder='Password'
+                  inputFontSize={THEMES.text.fontSize.px18}
                   style={{
                     display: 'flex',
                     flexDirection: 'column',
                     marginBottom: '13px',
-                    fontSize: '20px',
                   }}
                   error={errors.password?.message}
                 />
@@ -211,11 +230,11 @@ const UsersPage = () => {
                   label={'Conferma password'}
                   name={'passwordConfirm'}
                   placeholder='Conferma password'
+                  inputFontSize={THEMES.text.fontSize.px18}
                   style={{
                     display: 'flex',
                     flexDirection: 'column',
                     marginBottom: '13px',
-                    fontSize: '20px',
                   }}
                   error={errors.passwordConfirm?.message}
                 />
@@ -236,18 +255,22 @@ const UsersPage = () => {
               handleEdit();
             }}
           >
-            <Grid columnGap='10px' gridTemplateColumns={'1fr 1fr'}>
+            <Grid
+              columnGap='10px'
+              gridTemplateColumns={'1fr 1fr'}
+              fontSize={THEMES.text.fontSize.px18}
+            >
               <FormProvider {...methods}>
                 <InputField
                   label={'Email'}
                   name={'email'}
                   placeholder='Email'
+                  inputFontSize={THEMES.text.fontSize.px18}
                   isDisabled={true}
                   style={{
                     display: 'flex',
                     flexDirection: 'column',
                     marginBottom: '13px',
-                    fontSize: '20px',
                   }}
                   error={errors.email?.message}
                 />
@@ -255,22 +278,22 @@ const UsersPage = () => {
                   label={'Risorsa'}
                   name={'resourceId'}
                   placeholder='Risorsa'
+                  inputFontSize={THEMES.text.fontSize.px18}
                   style={{
                     display: 'flex',
                     flexDirection: 'column',
                     marginBottom: '13px',
-                    fontSize: '20px',
                   }}
                 />
                 <InputField
                   label={'Nome'}
                   name={'firstName'}
                   placeholder='Nome'
+                  inputFontSize={THEMES.text.fontSize.px18}
                   style={{
                     display: 'flex',
                     flexDirection: 'column',
                     marginBottom: '13px',
-                    fontSize: '20px',
                   }}
                   error={errors.firstName?.message}
                 />
@@ -278,11 +301,11 @@ const UsersPage = () => {
                   label={'Cognome'}
                   name={'lastName'}
                   placeholder='Cognome'
+                  inputFontSize={THEMES.text.fontSize.px18}
                   style={{
                     display: 'flex',
                     flexDirection: 'column',
                     marginBottom: '13px',
-                    fontSize: '20px',
                   }}
                   error={errors.lastName?.message}
                 />
@@ -303,18 +326,17 @@ const UsersPage = () => {
         {selectedAction === 'Delete' ? (
           <div
             style={{
-              fontSize: '22px',
-              fontWeight: '700',
-              color: 'rgba(81, 70, 137, 1)',
+              fontSize: THEMES.text.fontSize.px22,
+              fontWeight: THEMES.text.fontWeight.w700,
               margin: '60px 50px',
             }}
           >
             {selectedUser ? (
               <>
-                <span style={{ color: 'rgba(81, 70, 137, 1)' }}>
-                  Sei sicuro di voler eliminare{' '}
+                <span style={{ color: THEMES.color.sIndigo }}>
+                  {t('utilities.table.confirm-delete')}
                   <span
-                    style={{ color: 'rgba(239, 66, 111, 1)' }}
+                    style={{ color: THEMES.color.sDarkPink }}
                   >{`${selectedUser.firstName} ${selectedUser.lastName}`}</span>
                 </span>
                 <Flex flexDirection='row' justifyContent='center' marginTop='45px'>
@@ -325,34 +347,38 @@ const UsersPage = () => {
                       setIsOpenDeleteModal(false);
                     }}
                     style={{
-                      color: 'rgba(81, 70, 137, 1)',
-                      background: 'rgba(81, 70, 137, 0.3)',
-                      fontSize: '22px',
-                      fontWeight: '700',
+                      color: THEMES.color.sIndigo,
+                      background: THEMES.color.a30Indigo,
+                      fontSize: THEMES.text.fontSize.px22,
+                      fontWeight: THEMES.text.fontWeight.w700,
                       width: '145px',
                     }}
                   >
-                    <Icons name='Close' size={28} color='rgba(81, 70, 137, 1)' /> Annulla
+                    <Icons name='Close' size={28} color={THEMES.color.sIndigo} />{' '}
+                    {t('utilities.buttons.cancel')}
                   </ButtonComponent>
                   <ButtonComponent
                     onClick={() => {
                       handleDelete();
                     }}
                     style={{
-                      color: 'white',
-                      background: 'rgba(239, 66, 111, 1)',
-                      fontSize: '22px',
-                      fontWeight: '700',
+                      color: THEMES.color.sWhite,
+                      background: THEMES.color.sDarkPink,
+                      fontSize: THEMES.text.fontSize.px22,
+                      fontWeight: THEMES.text.fontWeight.w700,
                       width: '145px',
                       marginLeft: '28px',
                     }}
                   >
-                    <Icons name='Confirm' size={28} color='white' /> Conferma
+                    <Icons name='Confirm' size={28} color={THEMES.color.sWhite} />{' '}
+                    {t('utilities.buttons.confirm')}
                   </ButtonComponent>
                 </Flex>
               </>
             ) : (
-              <span style={{ color: 'rgba(81, 70, 137, 1)' }}>Nessun utente selezionato</span>
+              <span style={{ color: THEMES.color.sIndigo }}>
+                {t('pages.users.table.no-selected')}
+              </span>
             )}
           </div>
         ) : null}

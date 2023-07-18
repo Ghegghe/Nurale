@@ -4,5 +4,5 @@ export interface initialStateTypeOfPayments {
     data: TypeOfPayment[],
     loading: boolean,
     error: string | null,
-    pagination: number
+    totalCount: number
 }

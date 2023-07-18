@@ -118,7 +118,7 @@ export const SIDEBAR: Sidebar[] = [
             },
             {
                 label: base+'type-of-payment', 
-                link: ROUTES.dashboard,
+                link: ROUTES.typeOfPayments,
             },
             {
                 label: base+'users', 

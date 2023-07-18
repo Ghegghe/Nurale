@@ -52,7 +52,7 @@
     "scheduled-values": "PIANIFICAZIONE",
     "settings": "IMPOSTAZIONI",
     "skills": "ABILITÀ",
-    "type-of-payment": "TIPO DI PAGAMENTO",
+    "type-of-payments": "TIPI DI PAGAMENTO",
     "users": "UTENTI",
     "timesheet": "SCHEDA ATTIVITÀ",
     "report": "RAPPORTI"
@@ -64,7 +64,8 @@
           "first-name": "Nome",
           "last-name": "Cognome",
           "email": "Email"
-        }
+        },
+        "no-selected": "Nessun utente selezionato"
       }
     },
     "skills": {
@@ -77,6 +78,22 @@
         "add": "AGGIUNGI NUOVA SKILL",
         "edit": "MODIFICA SKILL",
         "no-selected": "Nessuna skill selezionata"
+      }
+    },
+    "type-of-payments": {
+      "table": {
+        "cols": {
+          "name": "Nome",
+          "days-to-first-payment": "Giorni al primo pagamento",
+          "days-between-payments": "Giorni tra i pagamenti",
+          "number-of-payments": "Numero di pagamenti",
+          "move-payments-to-the-end-of-month": "Spostare i pagamenti alla fine del mese",
+          "days-offset-payments": "Giorni scostamento pagamento",
+          "note": "Note"
+        },
+        "add": "AGGIUNGI NUOVO TIPO DI PAGAMENTO",
+        "edit": "MODIFICA TIPO DI PAGAMENTO",
+        "no-selected": "Nessun tipo di pagamento selezionato"
       }
     },
     "jobs": {

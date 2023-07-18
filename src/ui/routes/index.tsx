@@ -5,11 +5,11 @@ import {
   RegisterPage,
   SkillsPage,
   UsersPage,
+  TypeOfPaymentsPage,
 } from '../pages';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { ROUTES } from '../../utils/constant';
 import Layout from '../molecules/Layout';
-
 import RequireAuth from '../../utils/helper/RequireAuth';
 
 const AppRoutes = () => {
@@ -25,6 +25,7 @@ const AppRoutes = () => {
               <Route path={ROUTES.dashboard} element={<DashboardPage />} />
               <Route path={ROUTES.users} element={<UsersPage />} />
               <Route path={ROUTES.skills} element={<SkillsPage />} />
+              <Route path={ROUTES.typeOfPayments} element={<TypeOfPaymentsPage />} />
               {/* <Route path={ROUTES.quickInsert} element={<DashboardPage />} />
               <Route path={ROUTES.jobs} element={<DashboardPage />} />
               <Route path={ROUTES.orders} element={<DashboardPage />} />
@@ -39,7 +40,7 @@ const AppRoutes = () => {
               <Route path={ROUTES.scheduledPayments} element={<DashboardPage />} />
               <Route path={ROUTES.scheduledValues} element={<DashboardPage />} />
               
-              <Route path={ROUTES.typesOfPayments} element={<DashboardPage />} />
+              
               
               <Route path={ROUTES.timesheet} element={<DashboardPage />} />
               <Route path={ROUTES.report} element={<DashboardPage />} /> */}

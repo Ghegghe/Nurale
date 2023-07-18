@@ -7,3 +7,7 @@ export const getTypeOfPaymentsData = createSelector(
     getTypeOfPaymentsState,
     (state)=>state.data
 )
+export const getTypeOfPaymentsTotalCount = createSelector(
+    getTypeOfPaymentsState,
+    (state)=>state.totalCount
+)

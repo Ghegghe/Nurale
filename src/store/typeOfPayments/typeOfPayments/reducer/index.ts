@@ -7,7 +7,7 @@ const initialState: initialStateTypeOfPayments = {
     data: [],
     loading: false,
     error: null,
-    pagination: 0
+    totalCount: 0
 }
 
 export const typeOfPaymentsReducer = createSlice({
@@ -19,7 +19,7 @@ export const typeOfPaymentsReducer = createSlice({
             .addCase(fetchTypeOfPayments.fulfilled, (state, action)=>
             {
                 state.data = action.payload.data; 
-                state.pagination = action.payload.pagination;
+                state.totalCount = action.payload.pagination.totalCount;
                 state.loading = false
             })
             .addCase(fetchTypeOfPayments.pending, (state)=>
