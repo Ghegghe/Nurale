@@ -6,3 +6,8 @@ export interface initialStateTypeOfPayments {
     error: string | null,
     totalCount: number
 }
+export interface TypeOfPaymentsParams {
+    skip: number,
+    take: number,
+    hasEndOfMonth?: boolean
+}
