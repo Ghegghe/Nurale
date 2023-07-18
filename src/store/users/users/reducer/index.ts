@@ -7,7 +7,7 @@ const initialState: initialStateUsers = {
     data: [],
     loading: false,
     error: null,
-    pagination: 0
+    totalCount: 0
 }
 
 export const usersReducer = createSlice({
@@ -19,7 +19,7 @@ export const usersReducer = createSlice({
             .addCase(fetchUsers.fulfilled, (state, action)=>
             {
                 state.data = action.payload.data; 
-                state.pagination = action.payload.pagination;
+                state.totalCount = action.payload.pagination.totalCount;
                 state.loading = false
             })
             .addCase(fetchUsers.pending, (state)=>
@@ -29,7 +29,7 @@ export const usersReducer = createSlice({
             .addCase(fetchUsers.rejected, (state)=>
             {
                 state.loading = false
-                state.error = 'Errore nel fetch utenti'
+                state.error = 'Error'
             })
         
     }

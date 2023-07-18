@@ -7,3 +7,7 @@ export const getSkillsData = createSelector(
     getSkillsState,
     (state)=>state.data
 )
+export const getSkillsTotalCount = createSelector(
+    getSkillsState,
+    (state)=>state.totalCount
+)

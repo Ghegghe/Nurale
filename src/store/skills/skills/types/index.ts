@@ -4,5 +4,11 @@ export interface initialStateSkills {
     data: Skill[],
     loading: boolean,
     error: string | null,
-    pagination: number
+    totalCount: number
+}
+
+export interface SkillParams {
+    skip: number
+    take: number
+    skillType?: string
 }

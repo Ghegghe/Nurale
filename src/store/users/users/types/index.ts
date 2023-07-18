@@ -4,5 +4,5 @@ export interface initialStateUsers {
     data: User[],
     loading: boolean,
     error: string | null,
-    pagination: number
+    totalCount: number
 }

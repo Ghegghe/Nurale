@@ -7,11 +7,11 @@ const initialState: initialStateSkills = {
     data: [],
     loading: false,
     error: null,
-    pagination: 0
+    totalCount: 0
 }
 
 export const skillsReducer = createSlice({
-    name: 'skill',
+    name: 'skills',
     initialState,
     reducers: {},
     extraReducers: (builder) => {
@@ -19,7 +19,7 @@ export const skillsReducer = createSlice({
             .addCase(fetchSkills.fulfilled, (state, action)=>
             {
                 state.data = action.payload.data; 
-                state.pagination = action.payload.pagination;
+                state.totalCount = action.payload.pagination.totalCount;
                 state.loading = false
             })
             .addCase(fetchSkills.pending, (state)=>
