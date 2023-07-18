@@ -108,6 +108,18 @@
         "no-selected": "Nessun cliente selezionato"
       }
     },
+    "suppliers": {
+      "table": {
+        "cols": {
+          "name": "Nome",
+          "payment-type": "Tipo di pagamento",
+          "note": "Note"
+        },
+        "add": "AGGIUNGI NUOVO FORNITORE",
+        "edit": "MODIFICA FORNITORE",
+        "no-selected": "Nessun fornitore selezionato"
+      }
+    },
     "jobs": {
       "table": {
         "cols": {

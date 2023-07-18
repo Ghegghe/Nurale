@@ -54,7 +54,7 @@ export const SIDEBAR: Sidebar[] = [
             },
             {
                 label: base+'suppliers', 
-                link: ROUTES.dashboard,
+                link: ROUTES.suppliers,
             },
             {
                 label: base+'resources', 
