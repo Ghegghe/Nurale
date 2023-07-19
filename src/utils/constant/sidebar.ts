@@ -58,11 +58,11 @@ export const SIDEBAR: Sidebar[] = [
             },
             {
                 label: base+'resources', 
-                link: ROUTES.dashboard,
+                link: ROUTES.resources,
             },
             {
                 label: base+'resource-skill', 
-                link: ROUTES.dashboard,
+                link: ROUTES.resourceSkill,
             },
         ]
     },

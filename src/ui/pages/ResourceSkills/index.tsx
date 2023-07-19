@@ -5,7 +5,7 @@ import { useSelector } from 'react-redux';
 import { createColumnHelper } from '@tanstack/react-table';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { FormProvider, useForm } from 'react-hook-form';
-import { Actions, Supplier, THEMES } from '../../../utils';
+import { Actions, ResourceSkill, THEMES } from '../../../utils';
 import { schema } from './validation';
 import { TableLayout } from '../../molecules/Layout/PageContent';
 import { useEffect, useState } from 'react';
@@ -15,48 +15,53 @@ import { InputField, Modal } from '../../molecules';
 import { Form } from '../../molecules/Modal';
 import { useTranslation } from 'react-i18next';
 import {
-  addSupplier,
-  deleteSupplier,
-  fetchSuppliers,
-  getSuppliersData,
-  getSuppliersTotalCount,
-  updateSupplier,
+  addResourceSkill,
+  deleteResourceSkill,
+  fetchResourceSkills,
+  getResourceSkillsData,
+  getResourceSkillsTotalCount,
+  updateResourceSkill,
 } from '../../../store';
 
-const SuppliersPage = () => {
+const ResourceSkillsPage = () => {
   const [isOpenAddForm, setIsOpenAddForm] = useState(false);
   const [isOpenEditForm, setIsOpenEditForm] = useState(false);
   const [isOpenDeleteModal, setIsOpenDeleteModal] = useState(false);
-  const [selectedSupplier, setSelectedSupplier] = useState<Supplier | null>(null);
+  const [selectedResourceSkill, setSelectedResourceSkill] = useState<ResourceSkill | null>(null);
   const [selectedAction, setSelectedAction] = useState<Actions | null>(null);
-  const supplier = useSelector(getSuppliersData);
+  const resourceSkill = useSelector(getResourceSkillsData);
   const take = 10;
-  const totalCount = useSelector(getSuppliersTotalCount);
+  const totalCount = useSelector(getResourceSkillsTotalCount);
   const [page, setPage] = useState(1);
   const { t } = useTranslation();
   const columnHelper: any = createColumnHelper<any>();
 
   const cols = [
-    columnHelper.accessor('name', {
+    columnHelper.accessor('resource.name', {
       cell: (Props: any) => Props.getValue(),
-      header: t('pages.suppliers.table.cols.name'),
+      header: t('pages.resource-skills.table.cols.resource'),
     }),
-    columnHelper.accessor('typeOfPayment.name', {
+    columnHelper.accessor('skill.name', {
       cell: (Props: any) => Props.getValue(),
-      header: t('pages.suppliers.table.cols.payment-type'),
+      header: t('pages.resource-skills.table.cols.skill'),
+    }),
+    columnHelper.accessor('level', {
+      cell: (Props: any) => Props.getValue(),
+      header: t('pages.resource-skills.table.cols.level'),
     }),
     columnHelper.accessor('note', {
       cell: (Props: any) => Props.getValue(),
-      header: t('pages.suppliers.table.cols.note'),
+      header: t('pages.resource-skills.table.cols.note'),
     }),
   ];
 
-  const defaultValues: Supplier = {
-    name: '',
-    typeOfPaymentId: 0,
+  const defaultValues: ResourceSkill = {
+    resourceId: 0,
+    skillId: 0,
+    level: 0,
     note: '',
   };
-  const methods = useForm<Supplier>({
+  const methods = useForm<ResourceSkill>({
     defaultValues,
     resolver: zodResolver(schema),
   });
@@ -71,16 +76,18 @@ const SuppliersPage = () => {
 
   useEffect(() => {
     let skip = (page - 1) * take;
-    dispatch(fetchSuppliers({ take, skip }));
+    dispatch(fetchResourceSkills({ take, skip }));
+    console.log(resourceSkill);
   }, []);
   useEffect(() => {
     if (selectedAction === 'Add') {
       setIsOpenAddForm(true);
     } else if (selectedAction === 'Edit') {
       reset({
-        name: selectedSupplier?.name,
-        typeOfPaymentId: selectedSupplier?.typeOfPaymentId,
-        note: selectedSupplier?.note,
+        resourceId: selectedResourceSkill?.resourceId,
+        skillId: selectedResourceSkill?.skillId,
+        level: selectedResourceSkill?.level,
+        note: selectedResourceSkill?.note,
       });
       setIsOpenEditForm(true);
     } else if (selectedAction === 'Delete') {
@@ -89,44 +96,47 @@ const SuppliersPage = () => {
   }, [selectedAction]);
   useEffect(() => {
     let skip = (page - 1) * take;
-    dispatch(fetchSuppliers({ take, skip }));
+    dispatch(fetchResourceSkills({ take, skip }));
   }, [page]);
 
   const handleAdd = async () => {
     const isValidate = await trigger();
     if (isValidate) {
-      await dispatch(addSupplier(getValues()));
+      await dispatch(addResourceSkill(getValues()));
       let skip = (page - 1) * take;
-      await dispatch(fetchSuppliers({ take, skip }));
+      await dispatch(fetchResourceSkills({ take, skip }));
       reset(defaultValues);
-      setSelectedSupplier(null);
+      setSelectedResourceSkill(null);
       setSelectedAction(null);
       setIsOpenAddForm(false);
     }
   };
   const handleEdit = async () => {
     const isValidate = await trigger();
-    if (isValidate && selectedSupplier?.id) {
-      const supplier: Supplier = {
-        name: getValues().name,
-        typeOfPaymentId: getValues().typeOfPaymentId,
+    if (isValidate && selectedResourceSkill?.id) {
+      const resourceSkill: ResourceSkill = {
+        resourceId: getValues().resourceId,
+        skillId: getValues().skillId,
+        level: getValues().level,
         note: getValues().note,
       };
-      await dispatch(updateSupplier({ id: selectedSupplier?.id, supplier: supplier }));
+      await dispatch(
+        updateResourceSkill({ id: selectedResourceSkill?.id, resourceSkill: resourceSkill }),
+      );
       let skip = (page - 1) * take;
-      await dispatch(fetchSuppliers({ take, skip }));
+      await dispatch(fetchResourceSkills({ take, skip }));
       reset(defaultValues);
-      setSelectedSupplier(null);
+      setSelectedResourceSkill(null);
       setSelectedAction(null);
       setIsOpenEditForm(false);
     }
   };
   const handleDelete = async () => {
-    if (selectedSupplier?.id) {
-      await dispatch(deleteSupplier(selectedSupplier?.id));
+    if (selectedResourceSkill?.id) {
+      await dispatch(deleteResourceSkill(selectedResourceSkill?.id));
       let skip = (page - 1) * take;
-      await dispatch(fetchSuppliers({ take, skip }));
-      setSelectedSupplier(null);
+      await dispatch(fetchResourceSkills({ take, skip }));
+      setSelectedResourceSkill(null);
       setSelectedAction(null);
       setIsOpenDeleteModal(false);
     }
@@ -134,7 +144,7 @@ const SuppliersPage = () => {
 
   return (
     <Flex flexDirection={'column'} width={'100%'}>
-      <Navbar label={t('navbar.suppliers')} />
+      <Navbar label={t('navbar.resource-skills')} />
 
       <div
         style={{
@@ -144,10 +154,10 @@ const SuppliersPage = () => {
         }}
       >
         <TableLayout
-          data={supplier}
+          data={resourceSkill}
           cols={cols}
           action={{
-            setSelection: setSelectedSupplier,
+            setSelection: setSelectedResourceSkill,
             setAction: setSelectedAction,
             actions: ['Add', 'Edit', 'Delete', 'Paginate'],
             page: {
@@ -159,9 +169,9 @@ const SuppliersPage = () => {
         />
         {isOpenAddForm ? (
           <Form
-            label={t('pages.suppliers.table.add')}
+            label={t('pages.resource-skills.table.add')}
             onCancel={() => {
-              setSelectedSupplier(null);
+              setSelectedResourceSkill(null);
               setSelectedAction(null);
               reset(defaultValues);
               setIsOpenAddForm(false);
@@ -177,35 +187,45 @@ const SuppliersPage = () => {
             >
               <FormProvider {...methods}>
                 <InputField
-                  label={t('pages.suppliers.table.cols.name')}
-                  name={'name'}
-                  placeholder={t('pages.suppliers.table.cols.name')}
+                  label={t('pages.resource-skills.table.cols.resource')}
+                  name={'resourceId'}
+                  placeholder={t('pages.resource-skills.table.cols.resource')}
                   inputFontSize={THEMES.text.fontSize.px18}
                   style={{
                     display: 'flex',
                     flexDirection: 'column',
                     marginBottom: '13px',
                   }}
-                  error={errors.name?.message}
+                  error={errors.resourceId?.message}
                 />
                 <InputField
-                  label={t('pages.suppliers.table.cols.payment-type')}
-                  name={'typeOfPaymentId'}
-                  placeholder={t('pages.suppliers.table.cols.payment-type')}
+                  label={t('pages.resource-skills.table.cols.skill')}
+                  name={'skillId'}
+                  placeholder={t('pages.resource-skills.table.cols.skill')}
                   inputFontSize={THEMES.text.fontSize.px18}
-                  type='select'
-                  select={['Frontend', 'Backend', 'Designer', 'Administrator', 'Other']}
                   style={{
                     display: 'flex',
                     flexDirection: 'column',
                     marginBottom: '13px',
                   }}
-                  error={errors.typeOfPaymentId?.message}
+                  error={errors.skillId?.message}
                 />
                 <InputField
-                  label={t('pages.suppliers.table.cols.note')}
+                  label={t('pages.resource-skills.table.cols.level')}
+                  name={'level'}
+                  placeholder={t('pages.resource-skills.table.cols.level')}
+                  inputFontSize={THEMES.text.fontSize.px18}
+                  style={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    marginBottom: '13px',
+                  }}
+                  error={errors.level?.message}
+                />
+                <InputField
+                  label={t('pages.resource-skills.table.cols.note')}
                   name={'note'}
-                  placeholder={t('pages.suppliers.table.cols.note')}
+                  placeholder={t('pages.resource-skills.table.cols.note')}
                   inputFontSize={THEMES.text.fontSize.px18}
                   style={{
                     display: 'flex',
@@ -220,9 +240,9 @@ const SuppliersPage = () => {
         ) : null}
         {isOpenEditForm ? (
           <Form
-            label={t('pages.suppliers.table.edit')}
+            label={t('pages.resource-skills.table.edit')}
             onCancel={() => {
-              setSelectedSupplier(null);
+              setSelectedResourceSkill(null);
               setSelectedAction(null);
               reset(defaultValues);
               setIsOpenEditForm(false);
@@ -238,33 +258,45 @@ const SuppliersPage = () => {
             >
               <FormProvider {...methods}>
                 <InputField
-                  label={t('pages.suppliers.table.cols.name')}
-                  name={'name'}
-                  placeholder={t('pages.suppliers.table.cols.name')}
+                  label={t('pages.resource-skills.table.cols.resource')}
+                  name={'resourceId'}
+                  placeholder={t('pages.resource-skills.table.cols.resource')}
                   inputFontSize={THEMES.text.fontSize.px18}
                   style={{
                     display: 'flex',
                     flexDirection: 'column',
                     marginBottom: '13px',
                   }}
-                  error={errors.name?.message}
+                  error={errors.resourceId?.message}
                 />
                 <InputField
-                  label={t('pages.suppliers.table.cols.payment-type')}
-                  name={'typeOfPaymentId'}
-                  placeholder={t('pages.suppliers.table.cols.payment-type')}
+                  label={t('pages.resource-skills.table.cols.skill')}
+                  name={'skillId'}
+                  placeholder={t('pages.resource-skills.table.cols.skill')}
                   inputFontSize={THEMES.text.fontSize.px18}
                   style={{
                     display: 'flex',
                     flexDirection: 'column',
                     marginBottom: '13px',
                   }}
-                  error={errors.typeOfPaymentId?.message}
+                  error={errors.skillId?.message}
                 />
                 <InputField
-                  label={t('pages.suppliers.table.cols.note')}
+                  label={t('pages.resource-skills.table.cols.level')}
+                  name={'level'}
+                  placeholder={t('pages.resource-skills.table.cols.level')}
+                  inputFontSize={THEMES.text.fontSize.px18}
+                  style={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    marginBottom: '13px',
+                  }}
+                  error={errors.level?.message}
+                />
+                <InputField
+                  label={t('pages.resource-skills.table.cols.note')}
                   name={'note'}
-                  placeholder={t('pages.suppliers.table.cols.note')}
+                  placeholder={t('pages.resource-skills.table.cols.note')}
                   inputFontSize={THEMES.text.fontSize.px18}
                   style={{
                     display: 'flex',
@@ -282,7 +314,7 @@ const SuppliersPage = () => {
       <Modal
         isOpen={isOpenDeleteModal}
         onOutsudeClick={() => {
-          setSelectedSupplier(null);
+          setSelectedResourceSkill(null);
           setSelectedAction(null);
           setIsOpenDeleteModal(false);
         }}
@@ -295,16 +327,22 @@ const SuppliersPage = () => {
               margin: '60px 50px',
             }}
           >
-            {selectedSupplier ? (
+            {selectedResourceSkill ? (
               <>
                 <span style={{ color: THEMES.color.sIndigo }}>
                   {t('utilities.table.confirm-delete') + ' '}
-                  <span style={{ color: THEMES.color.sDarkPink }}>{selectedSupplier.name}</span>
+                  <span style={{ color: THEMES.color.sDarkPink }}>
+                    {selectedResourceSkill.skill?.name}
+                  </span>{' '}
+                  da{' '}
+                  <span style={{ color: THEMES.color.sDarkPink }}>
+                    {selectedResourceSkill.resource?.name}
+                  </span>
                 </span>
                 <Flex flexDirection='row' justifyContent='center' marginTop='45px'>
                   <ButtonComponent
                     onClick={() => {
-                      setSelectedSupplier(null);
+                      setSelectedResourceSkill(null);
                       setSelectedAction(null);
                       setIsOpenDeleteModal(false);
                     }}
@@ -339,7 +377,7 @@ const SuppliersPage = () => {
               </>
             ) : (
               <span style={{ color: THEMES.color.sIndigo }}>
-                {t('pages.suppliers.no-selected')}
+                {t('pages.resource-skills.no-selected')}
               </span>
             )}
           </div>
@@ -349,4 +387,4 @@ const SuppliersPage = () => {
   );
 };
 
-export default SuppliersPage;
+export default ResourceSkillsPage;

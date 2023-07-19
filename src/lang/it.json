@@ -41,7 +41,7 @@
     "customers": "CLIENTI",
     "suppliers": "FORNITORI",
     "resources": "RISORSE",
-    "resource-skill": "SKILL DELLE RISORSE",
+    "resource-skills": "SKILL DELLE RISORSE",
     "purchases": "ACQUISTI",
     "purchase-invoice": "FATTURA D'ACQUISTO",
     "purchase-invoice-activity": "FATTURA D'ACQUISTO ATTIVITÀ",
@@ -118,6 +118,35 @@
         "add": "AGGIUNGI NUOVO FORNITORE",
         "edit": "MODIFICA FORNITORE",
         "no-selected": "Nessun fornitore selezionato"
+      }
+    },
+    "resources": {
+      "table": {
+        "cols": {
+          "first-name": "Nome",
+          "last-name": "Cognome",
+          "hour-cost": "Costo or.",
+          "hour-revenue": "Ricavo or.",
+          "curriculum-vitae": "CV",
+          "supplier": "Fornitore",
+          "note": "Note"
+        },
+        "add": "AGGIUNGI NUOVA RISORSA",
+        "edit": "MODIFICA RISORSA",
+        "no-selected": "Nessuna risorsa selezionata"
+      }
+    },
+    "resource-skills": {
+      "table": {
+        "cols": {
+          "resource": "Risorsa",
+          "skill": "Abilità",
+          "level": "Livello",
+          "note": "Note"
+        },
+        "add": "AGGIUNGI NUOVA ABILITÀ PER LA RISORSA",
+        "edit": "MODIFICA ABILITÀ PER LA RISORSA",
+        "no-selected": "Nessuna abilità per la risorsa selezionata"
       }
     },
     "jobs": {

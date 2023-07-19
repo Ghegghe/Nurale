@@ -6,7 +6,6 @@ export interface initialStateResources {
     error: string | null,
     totalCount: number
 }
-
 export interface ResourcesParams {
     skip: number
     take: number

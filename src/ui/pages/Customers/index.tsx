@@ -41,7 +41,7 @@ const CustomersPage = () => {
       cell: (Props: any) => Props.getValue(),
       header: t('pages.customers.table.cols.name'),
     }),
-    columnHelper.accessor('typeOfPaymentId', {
+    columnHelper.accessor('typeOfPayment.name', {
       cell: (Props: any) => Props.getValue(),
       header: t('pages.customers.table.cols.payment-type'),
     }),

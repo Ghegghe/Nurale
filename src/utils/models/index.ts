@@ -81,6 +81,7 @@ export interface JwtTokenDecoded {
     note: string
   }
   export interface Resource {
+    id?: number
     firstName: string,
     lastName: string,
     hourCost: number,
@@ -91,8 +92,15 @@ export interface JwtTokenDecoded {
   }
 
   export interface ResourceSkill {
+    id?: number
     resourceId: number,
+    resource?: {
+      name: string
+    }
     skillId: number,
+    skill?: {
+      name: string
+    }
     level: number,
     note: string
   }
