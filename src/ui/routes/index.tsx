@@ -10,6 +10,9 @@ import {
   SuppliersPage,
   ResourcesPage,
   ResourceSkillsPage,
+  PurchaseInvoicesPage,
+  PurchaseInvoiceActivitiesPage,
+  SalesInvoicesPage,
 } from '../pages';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { ROUTES } from '../../utils/constant';
@@ -34,6 +37,12 @@ const AppRoutes = () => {
               <Route path={ROUTES.suppliers} element={<SuppliersPage />} />
               <Route path={ROUTES.resources} element={<ResourcesPage />} />
               <Route path={ROUTES.resourceSkill} element={<ResourceSkillsPage />} />
+              <Route path={ROUTES.purchaseInvoice} element={<PurchaseInvoicesPage />} />
+              <Route
+                path={ROUTES.purchaseInvoiceActivity}
+                element={<PurchaseInvoiceActivitiesPage />}
+              />
+              <Route path={ROUTES.salesInvoices} element={<SalesInvoicesPage />} />
               {/* <Route path={ROUTES.quickInsert} element={<DashboardPage />} />
               <Route path={ROUTES.jobs} element={<DashboardPage />} />
               <Route path={ROUTES.orders} element={<DashboardPage />} />
@@ -42,9 +51,9 @@ const AppRoutes = () => {
               
               
               
-              <Route path={ROUTES.purchaseInvoice} element={<DashboardPage />} />
-              <Route path={ROUTES.purchaseInvoiceActivity} element={<DashboardPage />} />
-              <Route path={ROUTES.salesInvoices} element={<DashboardPage />} />
+              
+              
+              
               <Route path={ROUTES.scheduledPayments} element={<DashboardPage />} />
               <Route path={ROUTES.scheduledValues} element={<DashboardPage />} />
               

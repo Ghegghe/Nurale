@@ -8,7 +8,7 @@ import { FormProvider, useForm } from 'react-hook-form';
 import { Actions, THEMES, TypeOfPayment } from '../../../utils';
 import { schema } from './validation';
 import { TableLayout } from '../../molecules/Layout/PageContent';
-import { useEffect, useState } from 'react';
+import { ReactNode, useEffect, useState } from 'react';
 import { useAppDispatch } from '../../../store';
 import { ButtonComponent, Icons } from '../../atoms';
 import { InputField, Modal } from '../../molecules';
@@ -29,12 +29,56 @@ const TypeOfPaymentsPage = () => {
   const [isOpenDeleteModal, setIsOpenDeleteModal] = useState(false);
   const [selectedTypeOfPayment, setSelectedTypeOfPayment] = useState<TypeOfPayment | null>(null);
   const [selectedAction, setSelectedAction] = useState<Actions | null>(null);
+  const [hasEndOfMonth, setHasEndOfMonth] = useState<boolean | undefined>(undefined);
   const typeOfPayment = useSelector(getTypeOfPaymentsData);
   const take = 10;
   const totalCount = useSelector(getTypeOfPaymentsTotalCount);
   const [page, setPage] = useState(1);
   const { t } = useTranslation();
   const columnHelper: any = createColumnHelper<any>();
+  const filters: ReactNode = (
+    <Grid columnGap='5px' gridTemplateColumns={'1fr 1fr 1fr'}>
+      <ButtonComponent
+        onClick={() => {
+          setHasEndOfMonth(undefined);
+        }}
+        style={{
+          color: hasEndOfMonth === undefined ? THEMES.color.sIndigo : THEMES.color.sWhite,
+          background: hasEndOfMonth === undefined ? THEMES.color.a30Indigo : THEMES.color.sDarkPink,
+          fontSize: THEMES.text.fontSize.px22,
+          fontWeight: THEMES.text.fontWeight.w700,
+        }}
+      >
+        {t('utilities.buttons.all')}
+      </ButtonComponent>
+      <ButtonComponent
+        onClick={() => {
+          setHasEndOfMonth(true);
+        }}
+        style={{
+          color: hasEndOfMonth === true ? THEMES.color.sIndigo : THEMES.color.sWhite,
+          background: hasEndOfMonth === true ? THEMES.color.a30Indigo : THEMES.color.sDarkPink,
+          fontSize: THEMES.text.fontSize.px22,
+          fontWeight: THEMES.text.fontWeight.w700,
+        }}
+      >
+        {t('utilities.buttons.yes')}
+      </ButtonComponent>
+      <ButtonComponent
+        onClick={() => {
+          setHasEndOfMonth(false);
+        }}
+        style={{
+          color: hasEndOfMonth === false ? THEMES.color.sIndigo : THEMES.color.sWhite,
+          background: hasEndOfMonth === false ? THEMES.color.a30Indigo : THEMES.color.sDarkPink,
+          fontSize: THEMES.text.fontSize.px22,
+          fontWeight: THEMES.text.fontWeight.w700,
+        }}
+      >
+        {t('utilities.buttons.no')}
+      </ButtonComponent>
+    </Grid>
+  );
 
   const cols = [
     columnHelper.accessor('name', {
@@ -54,7 +98,7 @@ const TypeOfPaymentsPage = () => {
       header: t('pages.type-of-payments.table.cols.number-of-payments'),
     }),
     columnHelper.accessor('movePaymentsToTheEndOfMonth', {
-      cell: (Props: any) => Props.getValue(),
+      cell: (Props: any) => (Props.getValue() ? 'sì' : 'no'),
       header: t('pages.type-of-payments.table.cols.move-payments-to-the-end-of-month'),
     }),
     columnHelper.accessor('note', {
@@ -72,6 +116,9 @@ const TypeOfPaymentsPage = () => {
     daysOffsetPayments: null,
     note: '',
   };
+  const setFiltersDefaultValues = () => {
+    setHasEndOfMonth(undefined);
+  };
   const methods = useForm<TypeOfPayment>({
     defaultValues,
     resolver: zodResolver(schema),
@@ -87,7 +134,7 @@ const TypeOfPaymentsPage = () => {
 
   useEffect(() => {
     let skip = (page - 1) * take;
-    dispatch(fetchTypeOfPayments({ take, skip }));
+    dispatch(fetchTypeOfPayments({ take, skip, hasEndOfMonth }));
   }, []);
   useEffect(() => {
     if (selectedAction === 'Add') {
@@ -105,11 +152,15 @@ const TypeOfPaymentsPage = () => {
       setIsOpenEditForm(true);
     } else if (selectedAction === 'Delete') {
       setIsOpenDeleteModal(true);
+    } else if (selectedAction === 'Filter') {
+      let skip = 0;
+      dispatch(fetchTypeOfPayments({ take, skip, hasEndOfMonth }));
+      setSelectedAction(null);
     }
   }, [selectedAction]);
   useEffect(() => {
     let skip = (page - 1) * take;
-    dispatch(fetchTypeOfPayments({ take, skip }));
+    dispatch(fetchTypeOfPayments({ take, skip, hasEndOfMonth }));
   }, [page]);
 
   const handleAdd = async () => {
@@ -117,7 +168,7 @@ const TypeOfPaymentsPage = () => {
     if (isValidate) {
       await dispatch(addTypeOfPayment(getValues()));
       let skip = (page - 1) * take;
-      await dispatch(fetchTypeOfPayments({ take, skip }));
+      await dispatch(fetchTypeOfPayments({ take, skip, hasEndOfMonth }));
       reset(defaultValues);
       setSelectedTypeOfPayment(null);
       setSelectedAction(null);
@@ -140,7 +191,7 @@ const TypeOfPaymentsPage = () => {
         updateTypeOfPayment({ id: selectedTypeOfPayment?.id, typeOfPayment: typeOfPayment }),
       );
       let skip = (page - 1) * take;
-      await dispatch(fetchTypeOfPayments({ take, skip }));
+      await dispatch(fetchTypeOfPayments({ take, skip, hasEndOfMonth }));
       reset(defaultValues);
       setSelectedTypeOfPayment(null);
       setSelectedAction(null);
@@ -151,7 +202,7 @@ const TypeOfPaymentsPage = () => {
     if (selectedTypeOfPayment?.id) {
       await dispatch(deleteTypeOfPayment(selectedTypeOfPayment?.id));
       let skip = (page - 1) * take;
-      await dispatch(fetchTypeOfPayments({ take, skip }));
+      await dispatch(fetchTypeOfPayments({ take, skip, hasEndOfMonth }));
       setSelectedTypeOfPayment(null);
       setSelectedAction(null);
       setIsOpenDeleteModal(false);
@@ -175,7 +226,11 @@ const TypeOfPaymentsPage = () => {
           action={{
             setSelection: setSelectedTypeOfPayment,
             setAction: setSelectedAction,
-            actions: ['Add', 'Edit', 'Delete', 'Paginate'],
+            actions: ['Add', 'Edit', 'Delete', 'Paginate', 'Filter'],
+            filters: {
+              filters,
+              setFiltersDefaultValues,
+            },
             page: {
               page: page,
               setPage: setPage,
@@ -295,7 +350,7 @@ const TypeOfPaymentsPage = () => {
         ) : null}
         {isOpenEditForm ? (
           <Form
-            label={t('pages.type-of-payment.edit')}
+            label={t('pages.type-of-payment.table.edit')}
             onCancel={() => {
               setSelectedTypeOfPayment(null);
               setSelectedAction(null);

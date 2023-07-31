@@ -6,13 +6,13 @@ import { addUser, deleteUser, fetchUsers, getUsersData, updateUser } from '../..
 import { createColumnHelper } from '@tanstack/react-table';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { FormProvider, useForm } from 'react-hook-form';
-import { User, Actions, THEMES } from '../../../utils';
+import { User, Actions, THEMES, KeyValue } from '../../../utils';
 import { schema } from './validation';
 import { TableLayout } from '../../molecules/Layout/PageContent';
 import { useEffect, useState } from 'react';
-import { useAppDispatch } from '../../../store';
+import { fetchResources, getResourcesData, useAppDispatch } from '../../../store';
 import { ButtonComponent, Icons } from '../../atoms';
-import { InputField, Modal } from '../../molecules';
+import { InputField, Modal, SelectField } from '../../molecules';
 import { Form } from '../../molecules/Modal';
 import { useTranslation } from 'react-i18next';
 
@@ -25,6 +25,8 @@ const UsersPage = () => {
   const users = useSelector(getUsersData);
   const { t } = useTranslation();
   const columnHelper: any = createColumnHelper<any>();
+  const resources = useSelector(getResourcesData);
+  const [resourceOptions, setResourceOptions] = useState<KeyValue[]>([]);
 
   const cols = [
     columnHelper.accessor('firstName', {
@@ -62,11 +64,26 @@ const UsersPage = () => {
 
   const dispatch = useAppDispatch();
 
+  const getResources = async () => {
+    await dispatch(fetchResources({}));
+    let options: KeyValue[] = [];
+    await resources.map((resource) => {
+      if (resource.id) {
+        options.push({
+          id: resource.id,
+          description: `${resource.firstName} ${resource.lastName}`,
+        });
+      }
+    });
+    setResourceOptions(options);
+  };
+
   useEffect(() => {
     dispatch(fetchUsers());
   }, []);
   useEffect(() => {
     if (selectedAction === 'Add') {
+      getResources();
       setIsOpenAddForm(true);
     } else if (selectedAction === 'Edit') {
       reset({
@@ -164,11 +181,12 @@ const UsersPage = () => {
                   }}
                   error={errors.email?.message}
                 />
-                <InputField
+                <SelectField
                   label={'Risorsa'}
                   name={'resourceId'}
                   placeholder='Risorsa'
                   inputFontSize={THEMES.text.fontSize.px18}
+                  options={resourceOptions}
                   style={{
                     display: 'flex',
                     flexDirection: 'column',
@@ -259,11 +277,12 @@ const UsersPage = () => {
                   }}
                   error={errors.email?.message}
                 />
-                <InputField
+                <SelectField
                   label={'Risorsa'}
                   name={'resourceId'}
                   placeholder='Risorsa'
                   inputFontSize={THEMES.text.fontSize.px18}
+                  options={resourceOptions}
                   style={{
                     display: 'flex',
                     flexDirection: 'column',
@@ -319,7 +338,7 @@ const UsersPage = () => {
             {selectedUser ? (
               <>
                 <span style={{ color: THEMES.color.sIndigo }}>
-                  {t('utilities.table.confirm-delete')}
+                  {t('utilities.table.confirm-delete')}{' '}
                   <span
                     style={{ color: THEMES.color.sDarkPink }}
                   >{`${selectedUser.firstName} ${selectedUser.lastName}`}</span>

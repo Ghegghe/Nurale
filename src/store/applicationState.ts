@@ -8,6 +8,9 @@ import { supplierReducer, suppliersReducer } from "./suppliers";
 import { resourceReducer, resourcesReducer } from "./resources";
 import { resourceSkillReducer, resourceSkillsReducer } from "./resourceSkills";
 import { purchaseInvoiceActivitiesReducer, purchaseInvoiceActivityReducer } from "./purchaseInvoiceActivities";
+import { purchaseInvoiceReducer, purchaseInvoicesReducer } from "./purchaseInvoices";
+import { saleInvoiceReducer, salesInvoicesReducer } from "./salesInvoices";
+import { jobsReducer, jobReducer } from "./jobs";
 
 const rootReducer = combineReducers({
   auth: authReducer.reducer,
@@ -25,7 +28,13 @@ const rootReducer = combineReducers({
   resource: resourceReducer.reducer,
   resourceSkills: resourceSkillsReducer.reducer,
   resourceSkill: resourceSkillReducer.reducer,
+  purchaseInvoices: purchaseInvoicesReducer.reducer,
+  purchaseInvoice: purchaseInvoiceReducer.reducer,
   purchaseInvoiceActivities: purchaseInvoiceActivitiesReducer.reducer,
-  purchaseInvoiceActivity: purchaseInvoiceActivityReducer.reducer
+  purchaseInvoiceActivity: purchaseInvoiceActivityReducer.reducer,
+  salesInvoices: salesInvoicesReducer.reducer,
+  saleInvoice: saleInvoiceReducer.reducer,
+  jobs: jobsReducer.reducer,
+  job: jobReducer.reducer
 })
 export default rootReducer

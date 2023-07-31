@@ -7,25 +7,32 @@ import {
   forwardRef,
 } from '@chakra-ui/react';
 import { ViewOffIcon, ViewIcon } from '@chakra-ui/icons';
-import { useState } from 'react';
+import { CSSProperties, useState } from 'react';
 import { useFormContext } from 'react-hook-form';
+import '../../../index.css';
+
 interface Props extends InputProps {
   name: string;
   type: string;
-  select?: string[];
   isPassword?: boolean;
+  style?: CSSProperties;
 }
 
 const InputComponent = forwardRef<Props, 'input'>(
-  ({ name, isPassword, type, select, ...rest }: Props) => {
+  ({ name, isPassword, type, style, ...rest }: Props) => {
     const { register } = useFormContext();
     const [show, setShow] = useState(false);
 
-    if (rest.style && !rest.style?.fontFamily) rest.style.fontFamily = 'inherit';
+    if (style && !style?.fontFamily) style.fontFamily = 'inherit';
 
     return (
       <InputGroup>
-        <Input {...rest} {...register(name)} type={isPassword && !show ? 'password' : 'text'} />
+        <Input
+          style={style}
+          {...rest}
+          {...register(name)}
+          type={isPassword && !show ? 'password' : 'text'}
+        />
         {isPassword ? (
           <InputRightElement style={{}}>
             <Button style={{ border: 'none', background: 'none' }} onClick={() => setShow(!show)}>

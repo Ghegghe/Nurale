@@ -1,5 +1,6 @@
 import { HTMLAttributes } from 'react';
 import { InputComponent } from '../../atoms';
+import '../../../index.css';
 
 interface Props extends HTMLAttributes<HTMLDivElement> {
   label: string;
@@ -10,7 +11,6 @@ interface Props extends HTMLAttributes<HTMLDivElement> {
   error?: string | undefined;
   isPassword?: boolean;
   isDisabled?: boolean;
-  select?: string[];
 }
 
 function InputField({
@@ -21,7 +21,6 @@ function InputField({
   placeholder,
   error,
   isPassword,
-  select,
   isDisabled = false,
   ...rest
 }: Props) {
@@ -31,7 +30,6 @@ function InputField({
       <InputComponent
         placeholder={placeholder}
         type={type}
-        select={select}
         name={name}
         isPassword={isPassword}
         disabled={isDisabled}

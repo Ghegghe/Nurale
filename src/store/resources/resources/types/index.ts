@@ -7,8 +7,8 @@ export interface initialStateResources {
     totalCount: number
 }
 export interface ResourcesParams {
-    skip: number
-    take: number
+    skip?: number
+    take?: number
     supplierId?: number,
     hasCV?: boolean
 }

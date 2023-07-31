@@ -91,6 +91,9 @@
           "days-offset-payments": "Giorni scostamento pagamento",
           "note": "Note"
         },
+        "filter": {
+          "payments-to-the-end-of-month": "Pagamenti alla fine del mese"
+        },
         "add": "AGGIUNGI NUOVO TIPO DI PAGAMENTO",
         "edit": "MODIFICA TIPO DI PAGAMENTO",
         "no-selected": "Nessun tipo di pagamento selezionato"
@@ -149,6 +152,54 @@
         "no-selected": "Nessuna abilità per la risorsa selezionata"
       }
     },
+    "purchase-invoices": {
+      "table": {
+        "cols": {
+          "invoice-number": "Numero fattura",
+          "supplier": "Fornitore",
+          "type-of-payment": "Tipo di pagamento",
+          "date": "Data",
+          "net-value": "Imponibile",
+          "vat-value": "IVA",
+          "total": "Totale",
+          "state": "Stato",
+          "note": "Note"
+        },
+        "add": "AGGIUNGI NUOVA FATTURA D'ACQUISTO",
+        "edit": "MODIFICA FATTURA D'ACQUISTO",
+        "no-selected": "Nessuna fattura selezionata"
+      }
+    },
+    "purchase-invoice-activities": {
+      "table": {
+        "cols": {
+          "id": "Id",
+          "activity": "Attività",
+          "purchase-invoice": "Fattura d'acquisto"
+        },
+        "add": "AGGIUNGI NUOVA FATTURA D'ACQUISTO ATTIVITÀ",
+        "edit": "MODIFICA FATTURA D'ACQUISTO ATTIVITÀ",
+        "no-selected": "Nessuna fattura d'acquisto attività selezionata"
+      }
+    },
+    "sales-invoices": {
+      "table": {
+        "cols": {
+          "invoice-number": "Numero fattura",
+          "date": "Data",
+          "net-value": "Imponibile",
+          "vat-value": "IVA",
+          "total": "Totale",
+          "customer": "Cliente",
+          "type-of-payment": "Tipo di pagamento",
+          "state": "Stato",
+          "note": "Note"
+        },
+        "add": "AGGIUNGI NUOVA FATTURA D'ACQUISTO ATTIVITÀ",
+        "edit": "MODIFICA FATTURA D'ACQUISTO ATTIVITÀ",
+        "no-selected": "Nessuna fattura d'acquisto attività selezionata"
+      }
+    },
     "jobs": {
       "table": {
         "cols": {
@@ -172,7 +223,13 @@
     },
     "buttons": {
       "confirm": "Conferma",
-      "cancel": "Annulla"
+      "cancel": "Annulla",
+      "clear-filters": "Svuota filtri",
+      "filter": "Filtra",
+      "all": "Tutti",
+      "yes": "Sì",
+      "no": "No",
+      "select": "Seleziona"
     }
   }
 }

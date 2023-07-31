@@ -5,13 +5,13 @@ import { useSelector } from 'react-redux';
 import { createColumnHelper } from '@tanstack/react-table';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { FormProvider, useForm } from 'react-hook-form';
-import { Actions, Skill, THEMES } from '../../../utils';
+import { Actions, SelectSkillOptions, Skill, THEMES } from '../../../utils';
 import { schema } from './validation';
 import { TableLayout } from '../../molecules/Layout/PageContent';
 import { useEffect, useState } from 'react';
 import { useAppDispatch } from '../../../store';
 import { ButtonComponent, Icons } from '../../atoms';
-import { InputField, Modal } from '../../molecules';
+import { InputField, Modal, SelectField } from '../../molecules';
 import { Form } from '../../molecules/Modal';
 import { useTranslation } from 'react-i18next';
 import {
@@ -35,6 +35,7 @@ const SkillsPage = () => {
   const [page, setPage] = useState(1);
   const { t } = useTranslation();
   const columnHelper: any = createColumnHelper<any>();
+  const filters = <></>;
 
   const cols = [
     columnHelper.accessor('name', {
@@ -53,9 +54,10 @@ const SkillsPage = () => {
 
   const defaultValues: Skill = {
     name: '',
-    skillType: '',
+    skillType: null,
     note: '',
   };
+  const setFiltersDefaultValues = () => {};
   const methods = useForm<Skill>({
     defaultValues,
     resolver: zodResolver(schema),
@@ -94,6 +96,7 @@ const SkillsPage = () => {
 
   const handleAdd = async () => {
     const isValidate = await trigger();
+    console.log(getValues());
     if (isValidate) {
       await dispatch(addSkill(getValues()));
       let skip = (page - 1) * take;
@@ -149,7 +152,11 @@ const SkillsPage = () => {
           action={{
             setSelection: setSelectedSkill,
             setAction: setSelectedAction,
-            actions: ['Add', 'Edit', 'Delete', 'Paginate'],
+            actions: ['Add', 'Edit', 'Delete', 'Paginate', 'Filter'],
+            filters: {
+              filters: filters,
+              setFiltersDefaultValues: setFiltersDefaultValues,
+            },
             page: {
               page: page,
               setPage: setPage,
@@ -188,13 +195,12 @@ const SkillsPage = () => {
                   }}
                   error={errors.name?.message}
                 />
-                <InputField
+                <SelectField
                   label={t('pages.skills.table.cols.skill-type')}
                   name={'skillType'}
-                  placeholder={t('pages.skills.table.cols.skill-type')}
+                  placeholder={t('utilities.buttons.select')}
                   inputFontSize={THEMES.text.fontSize.px18}
-                  type='select'
-                  select={['Frontend', 'Backend', 'Designer', 'Administrator', 'Other']}
+                  options={SelectSkillOptions}
                   style={{
                     display: 'flex',
                     flexDirection: 'column',
@@ -249,11 +255,12 @@ const SkillsPage = () => {
                   }}
                   error={errors.name?.message}
                 />
-                <InputField
+                <SelectField
                   label={t('pages.skills.table.cols.skill-type')}
                   name={'skillType'}
-                  placeholder={t('pages.skills.table.cols.skill-type')}
+                  placeholder={t('utilities.buttons.select')}
                   inputFontSize={THEMES.text.fontSize.px18}
+                  options={SelectSkillOptions}
                   style={{
                     display: 'flex',
                     flexDirection: 'column',

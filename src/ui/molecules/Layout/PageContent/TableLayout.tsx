@@ -1,7 +1,7 @@
 import { Flex, Table, TableContainer, Tbody, Td, Th, Thead, Tr } from '@chakra-ui/react';
 import { ButtonComponent, Icons } from '../../../atoms';
 import { flexRender, getCoreRowModel, useReactTable } from '@tanstack/react-table';
-import { useState } from 'react';
+import { ReactNode, useState } from 'react';
 import { Actions, THEMES } from '../../../../utils';
 import { useTranslation } from 'react-i18next';
 
@@ -12,6 +12,10 @@ interface Props {
     setSelection: (Prop: any) => void;
     setAction: (Prop: Actions) => void;
     actions: Actions[];
+    filters?: {
+      filters: ReactNode;
+      setFiltersDefaultValues: () => void;
+    };
     page?: {
       page: number;
       setPage: (Prop: number) => void;
@@ -54,27 +58,29 @@ const TableLayout = ({ data, cols, action }: Props) => {
           </ButtonComponent>
         ) : null}
 
-        <ButtonComponent
-          onClick={() => setIsOpenFilter(!isOpenFilter)}
-          style={{
-            background: THEMES.color.sDarkPink,
-            border: 'none',
-            borderRadius: THEMES.border.radius.px10,
-            color: THEMES.color.sWhite,
-            fontSize: THEMES.text.fontSize.px20,
-            padding: '8px 15px 8px 15px',
-            marginLeft: 'auto',
-            width: '110px',
-            justifyContent: 'flex-end',
-          }}
-        >
-          {isOpenFilter ? (
-            <Icons name='Add' size={32} rotation='45deg' />
-          ) : (
-            <Icons name='MagnifyingGlass' size={32} color={THEMES.color.sWhite} />
-          )}
-          {t('utilities.table.filter')}
-        </ButtonComponent>
+        {action?.actions.includes('Filter') ? (
+          <ButtonComponent
+            onClick={() => setIsOpenFilter(!isOpenFilter)}
+            style={{
+              background: THEMES.color.sDarkPink,
+              border: 'none',
+              borderRadius: THEMES.border.radius.px10,
+              color: THEMES.color.sWhite,
+              fontSize: THEMES.text.fontSize.px20,
+              padding: '8px 15px 8px 15px',
+              marginLeft: 'auto',
+              width: '110px',
+              justifyContent: 'flex-end',
+            }}
+          >
+            {isOpenFilter ? (
+              <Icons name='Add' size={32} rotation='45deg' />
+            ) : (
+              <Icons name='MagnifyingGlass' size={32} color={THEMES.color.sWhite} />
+            )}
+            {t('utilities.table.filter')}
+          </ButtonComponent>
+        ) : null}
       </Flex>
       {/* tabella */}
 
@@ -96,7 +102,7 @@ const TableLayout = ({ data, cols, action }: Props) => {
             boxShadow={`-2px 2px 4px 0px ${THEMES.color.a30Indigo}`}
             position='absolute'
             zIndex='10'
-            width='310px'
+            width='auto'
             height='100%'
             right='0'
           >
@@ -107,8 +113,40 @@ const TableLayout = ({ data, cols, action }: Props) => {
               </div>
             </Flex>
             <hr className='hrgray' style={{ margin: '0 17px 0 17px' }} />
-            <div style={{ height: '100%', padding: '17px', overflowY: 'scroll' }}>dfd</div>
-            <div style={{ padding: '17px' }}>rere</div>
+            <div style={{ height: '100%', padding: '17px', overflowY: 'scroll' }}>
+              {action?.filters?.filters}
+            </div>
+            <div style={{ padding: '17px' }}>
+              <ButtonComponent
+                onClick={() => {
+                  action?.filters?.setFiltersDefaultValues();
+                }}
+                style={{
+                  color: THEMES.color.sIndigo,
+                  background: THEMES.color.a30Indigo,
+                  fontSize: THEMES.text.fontSize.px22,
+                  fontWeight: THEMES.text.fontWeight.w700,
+                  width: '145px',
+                }}
+              >
+                {t('utilities.buttons.clear-filters')}
+              </ButtonComponent>
+              <ButtonComponent
+                onClick={() => {
+                  action?.setAction('Filter');
+                }}
+                style={{
+                  color: THEMES.color.sWhite,
+                  background: THEMES.color.sDarkPink,
+                  fontSize: THEMES.text.fontSize.px22,
+                  fontWeight: THEMES.text.fontWeight.w700,
+                  width: '145px',
+                  marginLeft: '28px',
+                }}
+              >
+                {t('utilities.buttons.filter')}
+              </ButtonComponent>
+            </div>
           </Flex>
         ) : null}
         <Table className='styledTable' variant='striped' colorScheme='gray' width='100%'>

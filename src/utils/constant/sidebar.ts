@@ -73,11 +73,11 @@ export const SIDEBAR: Sidebar[] = [
         subList: [
             {
                 label: base+'purchase-invoice', 
-                link: ROUTES.dashboard,
+                link: ROUTES.purchaseInvoice,
             },
             {
                 label: base+'purchase-invoice-activity', 
-                link: ROUTES.dashboard,
+                link: ROUTES.purchaseInvoiceActivity,
             }
         ]
     },
@@ -88,7 +88,7 @@ export const SIDEBAR: Sidebar[] = [
         subList: [
             {
                 label: base+'sales-invoices', 
-                link: ROUTES.dashboard,
+                link: ROUTES.salesInvoices,
             },
         ]
     },

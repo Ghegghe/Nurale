@@ -76,3 +76,9 @@ hr {
 .styledTable td {
     font-weight: 400;
 }
+.scrollbarSelect {
+    overflow: hidden auto;
+}
+.scrollbarSelect::-webkit-scrollbar {
+    display: none;
+}
